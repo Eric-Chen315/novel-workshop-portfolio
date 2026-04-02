@@ -1,0 +1,355 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/api/projects/[id]",
+      "regex": "^/api/projects/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/audit-outline",
+      "regex": "^/api/projects/([^/]+?)/audit\\-outline(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/audit\\-outline(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/chapters",
+      "regex": "^/api/projects/([^/]+?)/chapters(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/chapters(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/chapters/[num]",
+      "regex": "^/api/projects/([^/]+?)/chapters/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid",
+        "nxtPnum": "nxtPnum"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/chapters/(?<nxtPnum>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/chapters/[num]/preview",
+      "regex": "^/api/projects/([^/]+?)/chapters/([^/]+?)/preview(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid",
+        "nxtPnum": "nxtPnum"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/chapters/(?<nxtPnum>[^/]+?)/preview(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/characters",
+      "regex": "^/api/projects/([^/]+?)/characters(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/characters(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/generate-outline",
+      "regex": "^/api/projects/([^/]+?)/generate\\-outline(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/generate\\-outline(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/generate-outline/save",
+      "regex": "^/api/projects/([^/]+?)/generate\\-outline/save(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/generate\\-outline/save(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/knowledge/characters",
+      "regex": "^/api/projects/([^/]+?)/knowledge/characters(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/knowledge/characters(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/knowledge/characters/[charId]",
+      "regex": "^/api/projects/([^/]+?)/knowledge/characters/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid",
+        "nxtPcharId": "nxtPcharId"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/knowledge/characters/(?<nxtPcharId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/knowledge/facts",
+      "regex": "^/api/projects/([^/]+?)/knowledge/facts(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/knowledge/facts(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/knowledge/facts/extract",
+      "regex": "^/api/projects/([^/]+?)/knowledge/facts/extract(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/knowledge/facts/extract(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/knowledge/facts/merge",
+      "regex": "^/api/projects/([^/]+?)/knowledge/facts/merge(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/knowledge/facts/merge(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/knowledge/outline",
+      "regex": "^/api/projects/([^/]+?)/knowledge/outline(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/knowledge/outline(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/knowledge/worldbuilding",
+      "regex": "^/api/projects/([^/]+?)/knowledge/worldbuilding(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/knowledge/worldbuilding(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/outline/[chapterNum]",
+      "regex": "^/api/projects/([^/]+?)/outline/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid",
+        "nxtPchapterNum": "nxtPchapterNum"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/outline/(?<nxtPchapterNum>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/wizard/ai-characters",
+      "regex": "^/api/projects/([^/]+?)/wizard/ai\\-characters(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/wizard/ai\\-characters(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/wizard/ai-outline",
+      "regex": "^/api/projects/([^/]+?)/wizard/ai\\-outline(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/wizard/ai\\-outline(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/wizard/ai-world",
+      "regex": "^/api/projects/([^/]+?)/wizard/ai\\-world(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/wizard/ai\\-world(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/wizard/init",
+      "regex": "^/api/projects/([^/]+?)/wizard/init(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/wizard/init(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/wizard/master-outline",
+      "regex": "^/api/projects/([^/]+?)/wizard/master\\-outline(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/wizard/master\\-outline(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/wizard/save-outline",
+      "regex": "^/api/projects/([^/]+?)/wizard/save\\-outline(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/wizard/save\\-outline(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]/wizard/save-world",
+      "regex": "^/api/projects/([^/]+?)/wizard/save\\-world(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)/wizard/save\\-world(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]/chapters",
+      "regex": "^/projects/([^/]+?)/chapters(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)/chapters(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]/edit",
+      "regex": "^/projects/([^/]+?)/edit(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)/edit(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]/knowledge",
+      "regex": "^/projects/([^/]+?)/knowledge(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)/knowledge(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]/workspace",
+      "regex": "^/projects/([^/]+?)/workspace(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)/workspace(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/bible/characters",
+      "regex": "^/api/bible/characters(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/bible/characters(?:/)?$"
+    },
+    {
+      "page": "/api/bible/deprecated",
+      "regex": "^/api/bible/deprecated(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/bible/deprecated(?:/)?$"
+    },
+    {
+      "page": "/api/bible/plotlines",
+      "regex": "^/api/bible/plotlines(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/bible/plotlines(?:/)?$"
+    },
+    {
+      "page": "/api/bible/settings",
+      "regex": "^/api/bible/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/bible/settings(?:/)?$"
+    },
+    {
+      "page": "/api/projects",
+      "regex": "^/api/projects(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/projects(?:/)?$"
+    },
+    {
+      "page": "/api/write",
+      "regex": "^/api/write(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/write(?:/)?$"
+    },
+    {
+      "page": "/api/write/mock",
+      "regex": "^/api/write/mock(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/write/mock(?:/)?$"
+    },
+    {
+      "page": "/bible",
+      "regex": "^/bible(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/bible(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/projects",
+      "regex": "^/projects(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/projects(?:/)?$"
+    },
+    {
+      "page": "/projects/new",
+      "regex": "^/projects/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/projects/new(?:/)?$"
+    },
+    {
+      "page": "/projects/new/wizard",
+      "regex": "^/projects/new/wizard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/projects/new/wizard(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

@@ -1,0 +1,11 @@
+var R=require("../../../../../chunks/[turbopack]_runtime.js")("server/app/api/projects/[id]/generate-outline/route.js")
+R.c("server/chunks/0b7ee_next_dist_esm_build_templates_app-route_d5b7ef52.js")
+R.c("server/chunks/0b7ee_next_c09bab0b._.js")
+R.c("server/chunks/[root-of-the-server]__aac2f016._.js")
+R.c("server/chunks/0b7ee_openai_index_mjs_d4d6ab7f._.js")
+R.c("server/chunks/[root-of-the-server]__714a9d2a._.js")
+R.c("server/chunks/0b7ee_next_dist_542ac617._.js")
+R.c("server/chunks/novel-workshop_app_lib_knowledgeInjector_ts_e767c0a5._.js")
+R.c("server/chunks/b275f_server_app_api_projects_[id]_generate-outline_route_actions_23cc2dd0.js")
+R.m(81574)
+module.exports=R.m(81574).exports

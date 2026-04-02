@@ -1,0 +1,10 @@
+var R=require("../../../chunks/[turbopack]_runtime.js")("server/app/api/write/route.js")
+R.c("server/chunks/[root-of-the-server]__6a6de027._.js")
+R.c("server/chunks/0b7ee_next_dist_esm_build_templates_app-route_2360dfd4.js")
+R.c("server/chunks/novel-workshop_app_lib_knowledgeInjector_ts_e767c0a5._.js")
+R.c("server/chunks/[root-of-the-server]__714a9d2a._.js")
+R.c("server/chunks/0b7ee_zod_v4_classic_external_1ab5f800.js")
+R.c("server/chunks/0b7ee_openai_index_mjs_d4d6ab7f._.js")
+R.c("server/chunks/novel-workshop__next-internal_server_app_api_write_route_actions_3984edc9.js")
+R.m(23618)
+module.exports=R.m(23618).exports

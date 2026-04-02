@@ -1,0 +1,477 @@
+{
+  "version": 37,
+  "lastUpdated": "2026-03-13T15:46:00.000Z",
+  "characters": {
+    "李弈": {
+      "status": "active",
+      "lastSeenVolume": 3,
+      "lastSeenChapter": 171,
+      "exitReason": null,
+      "cannotAppear": false,
+      "knownConditions": [
+        "资产转化系统已卸载(ch171)，第四卷起无金手指辅助"
+      ],
+      "currentAbilities": [
+        "前世华尔街顶级量化交易员经验",
+        "红星集团掌舵人身份",
+        "无系统状态"
+      ],
+      "note": "第三卷结束时系统卸载，进入无系统状态。第四卷起纯凭个人能力+团队"
+    },
+    "魏莱": {
+      "status": "active",
+      "lastSeenVolume": 4,
+      "lastSeenChapter": 246,
+      "exitReason": null,
+      "cannotAppear": false,
+      "knownConditions": [
+        "已从大管家蜕变为帝国CEO/独立决策者(ch120首次独立决策, ch163叛徒线最终蜕变)",
+        "第三幕独立指挥灰衣人防御战(ch222)，公开宣告\"我不是他的影子\"(ch235)",
+        "第四幕接任全部管理权(ch237)，第五幕宣布人造太阳计划(ch244)"
+      ],
+      "currentAbilities": [
+        "独立决策能力",
+        "冷酷果断的危机处理",
+        "红星科技实际掌舵人（ch237起全权管理）",
+        "战略级商业谈判（专利信托基金设计者）"
+      ],
+      "note": "第三卷完成角色蜕变弧光。第四卷从执行者成长为独立决策者，235章是标志性转折点。237章后为红星唯一掌权人。生成235章及之后内容时，角色行为应体现独立判断而非听命于李弈。"
+    },
+    "赵光": {
+      "status": "active",
+      "lastSeenVolume": 3,
+      "lastSeenChapter": 165,
+      "exitReason": null,
+      "cannotAppear": false,
+      "knownConditions": [
+        "已发现刘大爷帕金森(ch165：目击绑带+药瓶+手部震颤)"
+      ],
+      "currentAbilities": [
+        "光子芯片V2.0设计者",
+        "红星首席技术官"
+      ],
+      "note": "V2.0已完成并发布。猎巫篇被冤枉→被追回(ch124-126)"
+    },
+    "刘大爷": {
+      "status": "active",
+      "lastSeenVolume": 3,
+      "lastSeenChapter": 165,
+      "exitReason": null,
+      "cannotAppear": false,
+      "knownConditions": [
+        "帕金森已被赵疯子发现(ch165)",
+        "手部震颤、绑带、药瓶已被目击"
+      ],
+      "currentAbilities": [
+        "八级钳工手艺",
+        "纳米级透镜手搓能力(受帕金森影响)"
+      ],
+      "note": "帕金森已在ch165揭示，不可再当'伏笔暗示'处理"
+    },
+    "王代码": {
+      "status": "active",
+      "lastSeenVolume": 3,
+      "lastSeenChapter": 168,
+      "exitReason": null,
+      "cannotAppear": false,
+      "knownConditions": [],
+      "currentAbilities": [
+        "顶级黑客/算力架构师",
+        "数据追踪"
+      ],
+      "note": "ch123发现异常流量揪出陈默"
+    },
+    "灰衣人": {
+      "status": "active",
+      "lastSeenVolume": 3,
+      "lastSeenChapter": 168,
+      "exitReason": null,
+      "cannotAppear": false,
+      "knownConditions": [
+        "500亿美金砸进V1.0过时产线(已被套)",
+        "收到红星嘲讽礼物(ch168)"
+      ],
+      "currentAbilities": [
+        "华尔街老钱家族资本",
+        "WCA幕后操控"
+      ],
+      "note": "已知红星实力，处于受挫状态"
+    },
+    "陈默": {
+      "status": "exited",
+      "lastSeenVolume": 4,
+      "lastSeenChapter": 246,
+      "exitReason": "ch123身份暴露(异常外传流量被王代码发现)，ch126搬离至纽约WCA总部。第四卷220章以纽约远程方式回归，选择背叛灰衣人保护王代码，224章与组织切断联系，231章发送最后补丁，246章在纽约开书店\"补丁\"。",
+      "cannotAppear": false,
+      "knownConditions": [
+        "间谍身份完全暴露",
+        "所有通讯记录已被截获(ch168)",
+        "已脱离灰衣人组织，定居纽约",
+        "通过匿名补丁完成对红星的最后善意"
+      ],
+      "currentAbilities": [],
+      "note": "已叛逃纽约并脱离灰衣人组织。仅限远程/间接出场（邮件、视频、代码），不可回归红星阵营，不可与李弈直接对话。"
+    },
+    "吴工": {
+      "status": "eliminated",
+      "lastSeenVolume": 3,
+      "lastSeenChapter": 168,
+      "exitReason": "ch168叛徒线清算：承认植入木马窃取V1.0理论，被驱逐+终身行业封杀",
+      "cannotAppear": true,
+      "knownConditions": [
+        "已承认全部罪行",
+        "终身电子厂面试封杀"
+      ],
+      "currentAbilities": [],
+      "note": "ch168被魏莱处理：给钱+终身行业封杀。不可再出场"
+    },
+    "李半城": {
+      "status": "active",
+      "lastSeenVolume": 4,
+      "lastSeenChapter": 246,
+      "exitReason": null,
+      "cannotAppear": false,
+      "knownConditions": [
+        "远程观察红星动态",
+        "对李弈的成就感到震颤",
+        "第四卷218章揭示真实意图（要的不是股份而是儿子回到谈判桌）",
+        "母亲林若晴故事首次披露（218章回忆：承诺大溪地、食言、分居）",
+        "通过魏莱达成晚宴协议(ch219)，222章父子晚宴",
+        "225章23秒电话缓和，232章游艇晚餐，233章百合花真相",
+        "246章将投资集团更名含\"弈\"字"
+      ],
+      "currentAbilities": [
+        "海城千亿商业帝国掌舵人",
+        "48小时内调动大规模资金接盘能力"
+      ],
+      "note": "第四卷核心驱动力是家庭关系而非商业利益。父子和解以沉默与理解完成，不需要戏剧化拥抱或道歉。每周为林若晴墓前送百合花（持续十几年），此细节在233章揭示。"
+    }
+  },
+  "techLines": {
+    "资产转化系统": {
+      "currentVersion": "已卸载",
+      "asOfVolume": 3,
+      "asOfChapter": 171,
+      "progression": [
+        "V1.0(卷1,亏损1:1转化)",
+        "V2.0(卷2)",
+        "V3.0(卷3,商业=0/科研1:2转化)",
+        "已卸载(卷3,ch171)"
+      ],
+      "rule": "系统已卸载不可重新激活。V3.0惩罚机制(连续盈利扣碎片)在卸载后不生效"
+    },
+    "光子芯片": {
+      "currentVersion": "V2.0已发布",
+      "asOfVolume": 4,
+      "asOfChapter": 213,
+      "progression": [
+        "V1.0(卷3,被陈默盗取/泄露)",
+        "V2.0(ch125-126赵光极限研发证生,ch129发布会算力屠杀)",
+        "V3.0(ch213模拟碳纳米管分子结构,推动天梯材料突破)"
+      ],
+      "rule": "版本只能递增。V2.0已完成并公开发布，不可再写'V2.0突破/研发中'。下一版应为V3.0"
+    },
+    "核聚变/人造太阳": {
+      "currentVersion": "已成功点火",
+      "asOfVolume": 4,
+      "asOfChapter": 246,
+      "progression": [
+        "启动(ch154)",
+        "反复失败(ch156-157)",
+        "点火成功(ch166)",
+        "天梯超导材料应用于工程化(ch244，第四卷)",
+        "工程化原型堆模拟首次持续正反馈(ch246)"
+      ],
+      "rule": "人造太阳已成功，此为不可逆成就"
+    }
+  },
+  "factions": {
+    "红星集团": {
+      "status": "运营中，横跨制造/互联网/物流/芯片。504厂为总部，人造太阳已成功",
+      "asOfVolume": 4,
+      "note": "第三卷末已成为国际级科技帝国。第四卷237章李弈辞职，魏莱全权接管。核心专利通过信托基金开放。"
+    },
+    "WCA(灰衣人阵营)": {
+      "status": "已解散",
+      "asOfVolume": 4,
+      "note": "收到红星嘲讽礼物(ch168)。第四卷224章SEC与港交所联合冻结秃鹫资产后，组织发布最终解散广播'鹰已折翼'，所有节点永久断开。"
+    },
+    "逆风物流/骑手": {
+      "status": "运营中，曾自发组成护卫队保护基地(ch164)",
+      "asOfVolume": 3,
+      "note": ""
+    },
+    "秃鹫基金": {
+      "status": "已被冻结/转型",
+      "asOfVolume": 4,
+      "note": "创始人Marcus·韦恩。216章联合三家华尔街机构发起做空，与灰衣人存在秘密合作（223章揭示）。224章被SEC和港交所联合冻结资产。241章剩余合法资产投资红星专利信托基金完成转型。"
+    }
+  },
+  "majorEvents": [
+    {
+      "id": "evt_v3_01",
+      "event": "陈默间谍身份暴露(异常外传流量被王代码发现)，撤离至纽约WCA总部",
+      "volume": 3,
+      "chapter": 126,
+      "irreversible": true,
+      "affectedCharacters": [
+        "陈默",
+        "王代码"
+      ]
+    },
+    {
+      "id": "evt_v3_02",
+      "event": "光子芯片V2.0发布会，算力屠杀",
+      "volume": 3,
+      "chapter": 129,
+      "irreversible": true,
+      "affectedCharacters": [
+        "赵光",
+        "李弈"
+      ]
+    },
+    {
+      "id": "evt_v3_03",
+      "event": "赵疯子发现刘大爷帕金森(目击绑带+药瓶+手部震颤)",
+      "volume": 3,
+      "chapter": 165,
+      "irreversible": true,
+      "affectedCharacters": [
+        "刘大爷",
+        "赵光"
+      ]
+    },
+    {
+      "id": "evt_v3_04",
+      "event": "人造太阳(核聚变)点火成功",
+      "volume": 3,
+      "chapter": 166,
+      "irreversible": true,
+      "affectedCharacters": [
+        "李弈",
+        "赵光",
+        "刘大爷",
+        "魏莱",
+        "王代码"
+      ]
+    },
+    {
+      "id": "evt_v3_05",
+      "event": "叛徒线全面清算：吴工被处理(承认罪行+驱逐+终身行业封杀)，截获全部通讯记录",
+      "volume": 3,
+      "chapter": 168,
+      "irreversible": true,
+      "affectedCharacters": [
+        "吴工",
+        "魏莱"
+      ]
+    },
+    {
+      "id": "evt_v3_06",
+      "event": "V1.0芯片残片寄给灰衣人作为嘲讽",
+      "volume": 3,
+      "chapter": 168,
+      "irreversible": true,
+      "affectedCharacters": [
+        "灰衣人"
+      ]
+    },
+    {
+      "id": "evt_v3_07",
+      "event": "资产转化系统V3.0完成终极任务后卸载",
+      "volume": 3,
+      "chapter": 171,
+      "irreversible": true,
+      "affectedCharacters": [
+        "李弈"
+      ]
+    },
+    {
+      "id": "1773344007738",
+      "event": "秃鹫基金资产被SEC和港交所联合冻结",
+      "volume": 4,
+      "chapter": 224,
+      "irreversible": true,
+      "affectedCharacters": [
+        "Marcus·韦恩、魏莱"
+      ]
+    },
+    {
+      "id": "1773344033734",
+      "event": "灰衣人组织永久解散（最终广播\"鹰已折翼\"）",
+      "volume": 4,
+      "chapter": 224,
+      "irreversible": true,
+      "affectedCharacters": [
+        "陈默"
+      ]
+    },
+    {
+      "id": "1773344055154",
+      "event": "李弈辞去红星科技董事长，管理权与投票权全部移交",
+      "volume": 4,
+      "chapter": 237,
+      "irreversible": true,
+      "affectedCharacters": [
+        "李弈、魏莱"
+      ]
+    },
+    {
+      "id": "1773344086738",
+      "event": "红星核心专利信托基金成立（发展中国家免费，发达国家付费）",
+      "volume": 4,
+      "chapter": 235,
+      "irreversible": true,
+      "affectedCharacters": [
+        "魏莱、李弈"
+      ]
+    },
+    {
+      "id": "1773405900001",
+      "event": "深海热泉群发现天然固态电解质（理论能量密度为现有锂电池30倍）",
+      "volume": 4,
+      "chapter": 207,
+      "irreversible": true,
+      "affectedCharacters": [
+        "李弈、魏莱"
+      ]
+    },
+    {
+      "id": "irrev_220_chen",
+      "event": "第220章：陈默背叛灰衣人组织，向王代码发送完整攻击方案",
+      "irreversible": true,
+      "affectedCharacters": [
+        "陈默",
+        "王代码"
+      ],
+      "volume": 4,
+      "chapter": 220
+    },
+    {
+      "id": "irrev_224_chen2",
+      "event": "第224章：陈默销毁加密设备，发送'账清了。别回复。'，与组织彻底切割",
+      "irreversible": true,
+      "affectedCharacters": [
+        "陈默"
+      ],
+      "volume": 4,
+      "chapter": 224
+    }
+  ],
+  "revealedInfo": [
+    {
+      "id": "rev_v3_01",
+      "info": "刘大爷患有帕金森病",
+      "volume": 3,
+      "chapter": 165,
+      "note": "赵疯子已目击绑带+药瓶+手部震颤，不可再当'伏笔暗示'"
+    },
+    {
+      "id": "rev_v3_02",
+      "info": "陈默是WCA间谍",
+      "volume": 3,
+      "chapter": 126,
+      "note": "身份完全公开，通讯记录全部截获(ch168)"
+    },
+    {
+      "id": "rev_v3_03",
+      "info": "V1.0芯片理论被盗(陈默/吴工)",
+      "volume": 3,
+      "chapter": 168,
+      "note": "已确认并处理，残片寄回嘲讽"
+    },
+    {
+      "id": "rev_v3_04",
+      "info": "灰衣人幕后操控WCA",
+      "volume": 3,
+      "chapter": 168,
+      "note": "红星已知其存在并公开挑衅(寄残片)"
+    },
+    {
+      "id": "rev_v3_05",
+      "info": "资产转化系统的存在与卸载",
+      "volume": 3,
+      "chapter": 171,
+      "note": "仅李弈本人知晓系统存在，系统已离开"
+    },
+    {
+      "id": "rev_v3_6",
+      "info": "仅李弈本人知晓资产转化系统曾经存在。规则如下：1）李弈独处时的纯内心独白中可以提及'系统'，这是他的真实记忆，允许以怀念、自嘲、吐槽等方式出现；2）任何对话、公开发言、与他人交流的场合中绝对不可出现'系统''碎片''金手指'等系统专属术语；3）章末钩子中不可以系统作为悬念核心；4）任何其他角色不可察觉、暗示或质疑系统的存在；5）匿名短信、外部信息等不可暗示外部势力知晓系统。",
+      "volume": 3,
+      "chapter": 171,
+      "note": "李弈内心独白允许提及系统，对话和公开场合禁止，其他角色禁止察觉"
+    },
+    {
+      "id": "1773344126099",
+      "info": "李弈母亲林若晴的完整故事（承诺大溪地、上市食言、带三岁李弈搬走、未离婚、去世后李半城每周送百合花十几年）",
+      "volume": 4,
+      "chapter": 218,
+      "note": "218章回忆闪回首次提及，233章完整揭示"
+    },
+    {
+      "id": "1773344151173",
+      "info": "秃鹫基金与灰衣人组织存在秘密合作关系（秃鹫事先知道攻击计划）",
+      "volume": 4,
+      "chapter": 223,
+      "note": "影响角色：Marcus·韦恩、魏莱、王代码 "
+    },
+    {
+      "id": "1773405727890",
+      "info": "深海热泉群发现天然固态电解质，理论能量密度为现有锂电池30倍",
+      "volume": 4,
+      "chapter": 207,
+      "note": ""
+    },
+    {
+      "id": "rev_207_vessel",
+      "info": "第207章：深海探测器名称为'烛龙号'，母船为'红星号'科考船",
+      "volume": 4,
+      "chapter": 207,
+      "note": "后续章节必须统一使用此名称"
+    },
+    {
+      "id": "rev_208_leak1",
+      "info": "第208章：秃鹫基金首份简报含红星未公开的内部预算数据（精确到小数点后两位），第一次伏笔",
+      "volume": 4,
+      "chapter": 208
+    },
+    {
+      "id": "rev_209_leak2",
+      "info": "第209章：泄露源IP锁定在红星内部网络，实际原因是灰衣人组织留下的系统后门，不是内部员工叛变",
+      "volume": 4,
+      "chapter": 209
+    },
+    {
+      "id": "rev_211_leak3",
+      "info": "第211章：秃鹫声明中第二次出现内部术语，强化伏笔",
+      "volume": 4,
+      "chapter": 211
+    },
+    {
+      "id": "rev_223_leak4",
+      "info": "第223章揭晓：王代码反向追踪发现秃鹫内部邮箱与灰衣人通讯频道关联，确认秃鹫与灰衣人是合作关系，信息泄露源是系统后门而非内鬼",
+      "volume": 4,
+      "chapter": 223
+    }
+  ],
+  "plotRules": [
+    "同一卷内不得出现两次以上相同的'危机-突破-升级'叙事模式",
+    "每卷至少有一个主角失败或付出重大代价的章节",
+    "已退出/死亡角色不可在没有合理的解释的情况下重新出场",
+    "已向读者揭示的秘密或信息不可再被当作'伏笔''暗示'处理",
+    "技术版本号/能力等级只能递增不可倒退",
+    "同一个危机解决手段在全书中不可使用超过三次",
+    "第四卷起（第172章后），资产转化系统已永久封散。禁止出现以下内容：系统面板、系统提示框、系统警告（如【警告！】【任务更新】等方括号格式）、系统发布新任务或给出反馈、\"宿主\"称呼、任何暗示系统仍在运行的描写。允许的用法：李弈在内心吐槽中提到\"系统\"（如\"系统你大爷\"），视为角色口癖，不违规；回忆过去系统存在时的事件",
+    "红星内部没有叛徒或内鬼。信息泄露的真实原因是灰衣人组织在红星系统中留下的未被发现的后门，不得编造红星员工叛变的情节",
+    "深海探测器统一名称为'烛龙号'，不得使用'海星一号''深潜者一号'等其他名称"
+  ],
+  "patternKeywords": {
+    "实验室|试剂|突破|研发": "lab-breakthrough",
+    "入侵|黑客|攻击|防火墙": "hacking-crisis",
+    "觉醒|升级|进化|突破": "power-upgrade",
+    "背叛|卧底|叛逆|反骨": "betrayal-reveal",
+    "拍卖|竞价|天价|举牌": "auction-battle",
+    "绑架|威胁|人质|要挟": "hostage-crisis"
+  },
+  "bannedExpressions": []
+}

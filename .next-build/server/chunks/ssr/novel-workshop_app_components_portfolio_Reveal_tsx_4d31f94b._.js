@@ -1,0 +1,3 @@
+module.exports=[85713,a=>{"use strict";var b=a.i(84475),c=a.i(27016);function d({children:a,className:d,delayMs:e=0}){let f=(0,c.useRef)(null),[g,h]=(0,c.useState)(!1);return(0,c.useEffect)(()=>{let a,b=f.current;if(!b)return;let c=new IntersectionObserver(([b])=>{b.isIntersecting&&(a=window.setTimeout(()=>{h(!0)},e),c.unobserve(b.target))},{threshold:.2});return c.observe(b),()=>{a&&window.clearTimeout(a),c.disconnect()}},[e]),(0,b.jsx)("div",{ref:f,className:`reveal ${g?"reveal-visible":""} ${d??""}`,children:a})}a.s(["Reveal",()=>d])}];
+
+//# sourceMappingURL=novel-workshop_app_components_portfolio_Reveal_tsx_4d31f94b._.js.map

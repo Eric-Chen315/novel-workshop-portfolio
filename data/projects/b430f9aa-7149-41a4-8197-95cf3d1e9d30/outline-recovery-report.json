@@ -1,0 +1,54 @@
+{
+  "recoveredFrom": "D:\\myproject\\小说一站式生成工作台\\novel-workshop\\data\\projects\\d0ca5fae-df9e-48f1-96b0-566087c5cd94\\migration-backups\\human-code-separation-20260319-231919\\outline.json",
+  "newProjectId": "b430f9aa-7149-41a4-8197-95cf3d1e9d30",
+  "oldProjectId": "d0ca5fae-df9e-48f1-96b0-566087c5cd94",
+  "recoveredVolumes": [
+    {
+      "title": "觉醒（71-171章）",
+      "chapterCount": 63,
+      "minChapter": 71,
+      "maxChapter": 171
+    },
+    {
+      "title": "坠落（1-30章）",
+      "chapterCount": 30,
+      "minChapter": 1,
+      "maxChapter": 30
+    },
+    {
+      "title": "深渊（31-70章）",
+      "chapterCount": 40,
+      "minChapter": 31,
+      "maxChapter": 70
+    }
+  ],
+  "newProjectOutline": [
+    {
+      "title": "觉醒（71-171章）",
+      "chapterCount": 63,
+      "minChapter": 71,
+      "maxChapter": 171
+    },
+    {
+      "title": "坠落（1-30章）",
+      "chapterCount": 30,
+      "minChapter": 1,
+      "maxChapter": 30
+    },
+    {
+      "title": "深渊（31-70章）",
+      "chapterCount": 40,
+      "minChapter": 31,
+      "maxChapter": 70
+    }
+  ],
+  "oldProjectRemainingOutline": [
+    {
+      "title": "天道无亲，全球收割（172-246章）",
+      "chapterCount": 75,
+      "minChapter": 172,
+      "maxChapter": 246
+    }
+  ],
+  "recoveryBackupDir": "D:\\myproject\\小说一站式生成工作台\\novel-workshop\\data\\projects\\d0ca5fae-df9e-48f1-96b0-566087c5cd94\\migration-backups\\human-code-separation-20260319-231919\\outline-recovery-20260319-234925"
+}

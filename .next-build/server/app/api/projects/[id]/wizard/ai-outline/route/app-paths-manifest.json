@@ -1,0 +1,3 @@
+{
+  "/api/projects/[id]/wizard/ai-outline/route": "app/api/projects/[id]/wizard/ai-outline/route.js"
+}

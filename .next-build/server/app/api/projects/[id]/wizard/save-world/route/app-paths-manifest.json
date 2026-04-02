@@ -1,0 +1,3 @@
+{
+  "/api/projects/[id]/wizard/save-world/route": "app/api/projects/[id]/wizard/save-world/route.js"
+}

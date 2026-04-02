@@ -1,0 +1,55 @@
+module.exports=[2157,(e,t,r)=>{t.exports=e.x("node:fs",()=>require("node:fs"))},93695,(e,t,r)=>{t.exports=e.x("next/dist/shared/lib/no-fallback-error.external.js",()=>require("next/dist/shared/lib/no-fallback-error.external.js"))},18622,(e,t,r)=>{t.exports=e.x("next/dist/compiled/next-server/app-page-turbo.runtime.prod.js",()=>require("next/dist/compiled/next-server/app-page-turbo.runtime.prod.js"))},56704,(e,t,r)=>{t.exports=e.x("next/dist/server/app-render/work-async-storage.external.js",()=>require("next/dist/server/app-render/work-async-storage.external.js"))},32319,(e,t,r)=>{t.exports=e.x("next/dist/server/app-render/work-unit-async-storage.external.js",()=>require("next/dist/server/app-render/work-unit-async-storage.external.js"))},50227,(e,t,r)=>{t.exports=e.x("node:path",()=>require("node:path"))},44376,(e,t,r)=>{t.exports=e.x("node:module",()=>require("node:module"))},51857,e=>{"use strict";var t=e.i(2157),r=e.i(50227),a=e.i(44376);let n=null,s=`
+CREATE TABLE IF NOT EXISTS characters (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  age_appearance TEXT NOT NULL DEFAULT '',
+  background TEXT NOT NULL DEFAULT '',
+  personality TEXT NOT NULL DEFAULT '',
+  speaking_style TEXT NOT NULL DEFAULT '',
+  catchphrase TEXT NOT NULL DEFAULT '',
+  current_location TEXT NOT NULL DEFAULT '',
+  current_status TEXT NOT NULL DEFAULT '',
+  default_inject INTEGER NOT NULL DEFAULT 0,
+  locked INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_characters_name ON characters(name);
+
+CREATE TABLE IF NOT EXISTS settings (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS plotlines (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  rule TEXT NOT NULL DEFAULT '',
+  trigger TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'untriggered',
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS deprecated (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  content TEXT NOT NULL DEFAULT '',
+  reason TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+`;async function i(){var e;if(n)return n;let i=r.default.join(process.cwd(),"data","bible.sqlite");e=r.default.dirname(i),t.default.existsSync(e)||t.default.mkdirSync(e,{recursive:!0});let{DatabaseSync:o}=(0,a.createRequire)(r.default.join(process.cwd(),"package.json"))("node:sqlite"),d=new o(i);d.exec("PRAGMA journal_mode = WAL;"),d.exec("PRAGMA foreign_keys = ON;"),d.exec(s);let l=new Date().toISOString();return d.prepare(`INSERT OR IGNORE INTO characters(id,name,default_inject,locked,created_at,updated_at)
+     VALUES('li_yi','李弈',1,1,?,?);`).run(l,l),d.prepare("UPDATE characters SET default_inject=1, locked=1, updated_at=? WHERE id='li_yi';").run(l),n=d,d}e.s(["getDb",()=>i])},28096,e=>{"use strict";function t(e,t){return Response.json(e,{headers:{"Cache-Control":"no-store"},...t})}function r(e){return new URL(e).searchParams.get("id")}let a=e.i(78747).z.string().min(1);e.s(["IdSchema",0,a,"getIdFromUrl",()=>r,"json",()=>t])},94071,e=>{"use strict";var t=e.i(46821),r=e.i(73489),a=e.i(62184),n=e.i(14679),s=e.i(18903),i=e.i(22196),o=e.i(24e3),d=e.i(49439),l=e.i(10138),u=e.i(372),c=e.i(11032),p=e.i(9628),T=e.i(38596),E=e.i(21036),N=e.i(51298),L=e.i(93695);e.i(40077);var R=e.i(60191),g=e.i(78747),h=e.i(51857),U=e.i(28096);function x(e){return{id:String(e.id??""),name:String(e.name??""),description:String(e.description??""),status:String(e.status??""),createdAt:String(e.created_at??""),updatedAt:String(e.updated_at??"")}}let A=g.z.object({id:g.z.string().min(1).optional(),name:g.z.string().min(1),description:g.z.string().optional().default(""),status:g.z.string().optional().default("")});async function O(){let e=(await (0,h.getDb)()).prepare("SELECT * FROM settings ORDER BY name ASC;").all();return(0,U.json)({data:e.map(x)})}async function m(e){let t=await e.json().catch(()=>null),r=A.safeParse(t);if(!r.success)return(0,U.json)({error:"Bad Request",details:r.error.flatten()},{status:400});let a=new Date().toISOString(),n=r.data,s=n.id||`s_${crypto.randomUUID()}`,i=await (0,h.getDb)();i.prepare(`INSERT INTO settings(id,name,description,status,created_at,updated_at)
+     VALUES(?,?,?,?,?,?)
+     ON CONFLICT(id) DO UPDATE SET
+       name=excluded.name,
+       description=excluded.description,
+       status=excluded.status,
+       updated_at=excluded.updated_at;`).run(s,n.name,n.description,n.status,a,a);let o=i.prepare("SELECT * FROM settings WHERE id=?").get(s);return(0,U.json)({data:o?x(o):null})}async function f(e){let t=(0,U.getIdFromUrl)(e.url),r=U.IdSchema.safeParse(t);return r.success?((await (0,h.getDb)()).prepare("DELETE FROM settings WHERE id=?;").run(r.data),(0,U.json)({ok:!0})):(0,U.json)({error:"Missing id"},{status:400})}e.s(["DELETE",()=>f,"GET",()=>O,"POST",()=>m,"runtime",0,"nodejs"],19609);var v=e.i(19609);let S=new t.AppRouteRouteModule({definition:{kind:r.RouteKind.APP_ROUTE,page:"/api/bible/settings/route",pathname:"/api/bible/settings",filename:"route",bundlePath:""},distDir:".next-build",relativeProjectDir:"",resolvedPagePath:"[project]/novel-workshop/app/api/bible/settings/route.ts",nextConfigOutput:"",userland:v}),{workAsyncStorage:w,workUnitAsyncStorage:_,serverHooks:C}=S;function I(){return(0,a.patchFetch)({workAsyncStorage:w,workUnitAsyncStorage:_})}async function b(e,t,a){S.isDev&&(0,n.addRequestMeta)(e,"devRequestTimingInternalsEnd",process.hrtime.bigint());let g="/api/bible/settings/route";g=g.replace(/\/index$/,"")||"/";let h=await S.prepare(e,t,{srcPage:g,multiZoneDraftMode:!1});if(!h)return t.statusCode=400,t.end("Bad Request"),null==a.waitUntil||a.waitUntil.call(a,Promise.resolve()),null;let{buildId:U,params:x,nextConfig:A,parsedUrl:O,isDraftMode:m,prerenderManifest:f,routerServerContext:v,isOnDemandRevalidate:w,revalidateOnlyGenerated:_,resolvedPathname:C,clientReferenceManifest:I,serverActionsManifest:b}=h,D=(0,o.normalizeAppPath)(g),y=!!(f.dynamicRoutes[D]||f.routes[C]),X=async()=>((null==v?void 0:v.render404)?await v.render404(e,t,O,!1):t.end("This page could not be found"),null);if(y&&!m){let e=!!f.routes[C],t=f.dynamicRoutes[D];if(t&&!1===t.fallback&&!e){if(A.experimental.adapterPath)return await X();throw new L.NoFallbackError}}let F=null;!y||S.isDev||m||(F="/index"===(F=C)?"/":F);let P=!0===S.isDev||!y,j=y&&!P;b&&I&&(0,i.setManifestsSingleton)({page:g,clientReferenceManifest:I,serverActionsManifest:b});let k=e.method||"GET",q=(0,s.getTracer)(),M=q.getActiveScopeSpan(),H={params:x,prerenderManifest:f,renderOpts:{experimental:{authInterrupts:!!A.experimental.authInterrupts},cacheComponents:!!A.cacheComponents,supportsDynamicResponse:P,incrementalCache:(0,n.getRequestMeta)(e,"incrementalCache"),cacheLifeProfiles:A.cacheLife,waitUntil:a.waitUntil,onClose:e=>{t.on("close",e)},onAfterTaskError:void 0,onInstrumentationRequestError:(t,r,a,n)=>S.onRequestError(e,t,a,n,v)},sharedContext:{buildId:U}},K=new d.NodeNextRequest(e),B=new d.NodeNextResponse(t),$=l.NextRequestAdapter.fromNodeNextRequest(K,(0,l.signalFromNodeResponse)(t));try{let i=async e=>S.handle($,H).finally(()=>{if(!e)return;e.setAttributes({"http.status_code":t.statusCode,"next.rsc":!1});let r=q.getRootSpanAttributes();if(!r)return;if(r.get("next.span_type")!==u.BaseServerSpan.handleRequest)return void console.warn(`Unexpected root span type '${r.get("next.span_type")}'. Please report this Next.js issue https://github.com/vercel/next.js`);let a=r.get("next.route");if(a){let t=`${k} ${a}`;e.setAttributes({"next.route":a,"http.route":a,"next.span_name":t}),e.updateName(t)}else e.updateName(`${k} ${g}`)}),o=!!(0,n.getRequestMeta)(e,"minimalMode"),d=async n=>{var s,d;let l=async({previousCacheEntry:r})=>{try{if(!o&&w&&_&&!r)return t.statusCode=404,t.setHeader("x-nextjs-cache","REVALIDATED"),t.end("This page could not be found"),null;let s=await i(n);e.fetchMetrics=H.renderOpts.fetchMetrics;let d=H.renderOpts.pendingWaitUntil;d&&a.waitUntil&&(a.waitUntil(d),d=void 0);let l=H.renderOpts.collectedTags;if(!y)return await (0,p.sendResponse)(K,B,s,H.renderOpts.pendingWaitUntil),null;{let e=await s.blob(),t=(0,T.toNodeOutgoingHttpHeaders)(s.headers);l&&(t[N.NEXT_CACHE_TAGS_HEADER]=l),!t["content-type"]&&e.type&&(t["content-type"]=e.type);let r=void 0!==H.renderOpts.collectedRevalidate&&!(H.renderOpts.collectedRevalidate>=N.INFINITE_CACHE)&&H.renderOpts.collectedRevalidate,a=void 0===H.renderOpts.collectedExpire||H.renderOpts.collectedExpire>=N.INFINITE_CACHE?void 0:H.renderOpts.collectedExpire;return{value:{kind:R.CachedRouteKind.APP_ROUTE,status:s.status,body:Buffer.from(await e.arrayBuffer()),headers:t},cacheControl:{revalidate:r,expire:a}}}}catch(t){throw(null==r?void 0:r.isStale)&&await S.onRequestError(e,t,{routerKind:"App Router",routePath:g,routeType:"route",revalidateReason:(0,c.getRevalidateReason)({isStaticGeneration:j,isOnDemandRevalidate:w})},!1,v),t}},u=await S.handleResponse({req:e,nextConfig:A,cacheKey:F,routeKind:r.RouteKind.APP_ROUTE,isFallback:!1,prerenderManifest:f,isRoutePPREnabled:!1,isOnDemandRevalidate:w,revalidateOnlyGenerated:_,responseGenerator:l,waitUntil:a.waitUntil,isMinimalMode:o});if(!y)return null;if((null==u||null==(s=u.value)?void 0:s.kind)!==R.CachedRouteKind.APP_ROUTE)throw Object.defineProperty(Error(`Invariant: app-route received invalid cache entry ${null==u||null==(d=u.value)?void 0:d.kind}`),"__NEXT_ERROR_CODE",{value:"E701",enumerable:!1,configurable:!0});o||t.setHeader("x-nextjs-cache",w?"REVALIDATED":u.isMiss?"MISS":u.isStale?"STALE":"HIT"),m&&t.setHeader("Cache-Control","private, no-cache, no-store, max-age=0, must-revalidate");let L=(0,T.fromNodeOutgoingHttpHeaders)(u.value.headers);return o&&y||L.delete(N.NEXT_CACHE_TAGS_HEADER),!u.cacheControl||t.getHeader("Cache-Control")||L.get("Cache-Control")||L.set("Cache-Control",(0,E.getCacheControlHeader)(u.cacheControl)),await (0,p.sendResponse)(K,B,new Response(u.value.body,{headers:L,status:u.value.status||200})),null};M?await d(M):await q.withPropagatedContext(e.headers,()=>q.trace(u.BaseServerSpan.handleRequest,{spanName:`${k} ${g}`,kind:s.SpanKind.SERVER,attributes:{"http.method":k,"http.target":e.url}},d))}catch(t){if(t instanceof L.NoFallbackError||await S.onRequestError(e,t,{routerKind:"App Router",routePath:D,routeType:"route",revalidateReason:(0,c.getRevalidateReason)({isStaticGeneration:j,isOnDemandRevalidate:w})},!1,v),y)throw t;return await (0,p.sendResponse)(K,B,new Response(null,{status:500})),null}}e.s(["handler",()=>b,"patchFetch",()=>I,"routeModule",()=>S,"serverHooks",()=>C,"workAsyncStorage",()=>w,"workUnitAsyncStorage",()=>_],94071)}];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__74b6ad2b._.js.map

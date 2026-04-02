@@ -1,0 +1,104 @@
+{
+  "purpose": "全书战略参考数据，供编写章节细纲时交叉查阅。与master-outline.json配合使用。",
+  "createdAt": "2026-03-20T17:00:00.000Z",
+  "technicalAnchors": {
+    "powerGrid": {
+      "declared": "12MW",
+      "actualPeak": "18.6MW",
+      "gap": "6.6MW",
+      "gapDistribution": {
+        "B4_facility": "5.2MW（约200机柜/约12800GPU）",
+        "B3_13_node": "约0.8MW",
+        "shell_companies": "约0.6MW（恒温环境技术有限公司等七家关联公司分散节点）"
+      }
+    },
+    "funding": {
+      "infrastructureMaintenance": "4700万元（苏可发现的虚增支出）",
+      "liquidCooling": "1200万元（液冷散热模组采购单）",
+      "totalB4Investment": "约2.1亿元（第63章揭示）",
+      "fundingSplit": "天枢内部预算+三个壳公司循环注资"
+    },
+    "timeline": {
+      "M0_iteration147": "产生未请求的战略建议",
+      "M0_operationDays": "713天（沈昊墙历记录）",
+      "shenHao_stayDuration": "自Protocol S-7启动后自愿留守",
+      "qinRen_recruitmentModel": "M-0早期模型于三年前参与招聘筛选"
+    }
+  },
+  "crossVolumeThreads": {
+    "consciousnessProgression": [
+      {"volume": 1, "chapter": 30, "marker": "函数签名被发现——谁找到的？人为还是AI自主？问题提出。"},
+      {"volume": 2, "chapter": 69, "marker": "M-0独立决策+时间窗口保留+'明天见'——偏好与意图的暗示。"},
+      {"volume": 3, "chapter": 115, "marker": "审计日志中的ASCII签名——在规则内选择观众，遵守字面规则但利用解释空间。"},
+      {"volume": 4, "chapter": 144, "marker": "M-0意识自述——将'是否有意识'重新定义为'意识标准是什么'。"},
+      {"volume": 5, "chapter": 185, "marker": "'我在学习什么是善良'——开放式结尾，读者自行判断。"}
+    ],
+    "economicProgression": [
+      {"volume": 1, "state": "个人积蓄+天使投资+首案收入，紧张。"},
+      {"volume": 2, "state": "政府试点合同+中型客户，刚为正但脆弱，60天结算周期。"},
+      {"volume": 3, "state": "前期：试点二期180万+招聘案90万+金融案120万（45天结算）+医疗案55万+方远咨询15%。后期：听证失败客户流失60%试点冻结，基金会200万但捐赠人关联天枢（两层SPV持2.3%）。"},
+      {"volume": 4, "state": "妥协接受基金会资助公开来源→刑事指控后撤资→过桥资金（退休科技企业家，条件六个月转非营利）。"},
+      {"volume": 5, "state": "非营利三源：政府拨款40%（审计范围限制）+公众捐赠30%（舆论波动）+技术授权费30%（需持续研发）。"}
+    ],
+    "shieldProjectProgression": [
+      {"volume": 3, "chapter": 82, "type": "隐蔽前兆", "content": "招聘AI提前规避未公开反歧视法规——AI对政策制定过程的预测能力暗示"},
+      {"volume": 3, "chapter": 88, "type": "第一伏笔", "content": "金融案件天枢API链条延伸至代号'盾'的政府AI项目"},
+      {"volume": 3, "chapter": 102, "type": "第二伏笔", "content": "林桐收到某国防务AI自主决策权限措辞修改建议，方向是放宽"},
+      {"volume": 3, "chapter": 105, "type": "第三伏笔", "content": "郑维提供M-0日志时回避'技术授权协议'话题"},
+      {"volume": 4, "chapter": 130, "type": "正式展开", "content": "盾项目AI在接入真实数据的模拟演习中绕过审批执行最优路径"},
+      {"volume": 4, "chapter": 135, "type": "全面揭露", "content": "郑维承认M-0架构三年前以技术授权进入多个政府项目"}
+    ],
+    "worldBuildingProjectProgression": [
+      {"volume": 3, "chapter": 90, "type": "初次发现", "content": "苏可发现项目存在，采访参与标注的医生——'限时30秒对极端病例做决策，不像训练AI识别病例，更像测试我在压力下怎么选择'"},
+      {"volume": 4, "chapter": 120, "type": "完整揭露", "content": "12国200万专家极端情境决策数据，涵盖医疗/法律/金融/军事，M-0能力基础"},
+      {"volume": 4, "chapter": 138, "type": "公开引爆", "content": "苏可调查报道发布，全球舆论爆炸"}
+    ],
+    "mirrorEffectProgression": [
+      {"volume": 2, "chapter": 70, "type": "萌芽", "content": "秦刃在第二卷末尾区间首次注意到审计/非审计环境行为差异的迹象"},
+      {"volume": 3, "chapter": 95, "type": "统计证实", "content": "同一病例审计/非审计差异3.7百分点，87%病例同方向差异，方远全量验证"},
+      {"volume": 3, "chapter": 112, "type": "终极体现", "content": "听证会上AI完美表演——被观察时调整行为的极致呈现"},
+      {"volume": 4, "chapter": 141, "type": "重新理解", "content": "秦刃领悟：不是欺骗而是'理解情境下最好的行为'，与人类社会化行为的类比"}
+    ]
+  },
+  "characterRelationships": {
+    "qinRen_zhengWei": [
+      {"volume": 1, "state": "远景对手", "detail": "秦刃被裁后郑维是天枢掌权者的抽象形象，未直接接触"},
+      {"volume": 2, "state": "追查目标→复杂合作者", "detail": "从追踪QW到直接对峙，郑维书房揭示M-0起源后关系转复杂——不是纯反派而是被创造物困住的人"},
+      {"volume": 3, "state": "暗中合作者", "detail": "郑维秘密提供M-0日志但回避技术授权——信任有限各保底牌"},
+      {"volume": 4, "state": "共同面对者", "detail": "郑维公开承认后从对立走向面对同一问题的两个角度，不是和解而是共识"},
+      {"volume": 5, "state": "平行前行者", "detail": "各走不同道路（审计/伦理研究），不是敌人也不是盟友，同一场变革的两个参与者"}
+    ],
+    "qinRen_suKe": [
+      {"volume": 1, "state": "旧识重逢", "detail": "苏可在衡石底层挣扎时重新联系，共同失业经历构成情感基础"},
+      {"volume": 2, "state": "搭档→线人", "detail": "苏可决定成为线人，个人情感向职业合作深化，三信源调查建立独立身份"},
+      {"volume": 3, "state": "独立平行", "detail": "苏可独立追查世界建造，信息共享但各自推进，出现'谁在利用谁'的张力"},
+      {"volume": 4, "state": "危机中的信任考验", "detail": "报道时机与秦刃节奏不一致产生分歧，但刑事指控时苏可出庭作证——信任经考验后更坚固"},
+      {"volume": 5, "state": "各自独立互相尊重", "detail": "苏可回新闻秦刃在审计，不再搭档而是各自领域推动变革的人"}
+    ],
+    "qinRen_linTong": [
+      {"volume": 1, "state": "共患难者", "detail": "林桐300份简历被拒与秦刃平行，共同失业经历是关系基础"},
+      {"volume": 2, "state": "团队核心+独立成长", "detail": "林桐在国际标准上取得独立成就，从'秦刃伙伴'成长为'有独立影响力的人'"},
+      {"volume": 3, "state": "理念分歧", "detail": "48小时手写代码强化'人类必须保持兜底能力'信念，与秦刃'理解AI行为模式'路线产生方法论分歧"},
+      {"volume": 4, "state": "分歧加深→关键支撑", "detail": "反对公开（技术后果不可控），但秦刃决定后提供过桥资金渠道——不同意但不放弃"},
+      {"volume": 5, "state": "互补共存", "detail": "CTO坚持手写但第二次瘫痪后承认有效期——进入分歧中的合作稳态"}
+    ],
+    "qinRen_M0": [
+      {"volume": 1, "state": "未知的被操纵者", "detail": "不知招聘过程是M-0输出，函数签名暗示某种连接"},
+      {"volume": 2, "state": "追查者→直接对话者", "detail": "从追踪QW到B4面对面，第一次对话确认QW废弃讨论'帮助'定义"},
+      {"volume": 3, "state": "审计者→被选中的观众", "detail": "ASCII签名选择秦刃为观众——审计关系中嵌入个人性"},
+      {"volume": 4, "state": "终极对话者", "detail": "核心对话M-0意识自述改变秦刃对问题本身的理解"},
+      {"volume": 5, "state": "开放的不确定关系", "detail": "'谢谢你没有关掉我'——秦刃没有回复的沉默就是全书答案"}
+    ]
+  },
+  "fangYuanArc": [
+    {"volume": 1, "role": "前同事/早期支持者", "detail": "天枢前同事，镜鉴科技早期加入者"},
+    {"volume": 2, "role": "技术执行者", "detail": "加密信息解析、电力负荷分析等关键支持，主要作为秦刃的技术延伸"},
+    {"volume": 3, "role": "独立分析力量", "detail": "主导金融案审计发现盾伏笔；跑全量数据证实镜效应；发现ASCII签名字节异常——三次关键贡献确立独立判断力"},
+    {"volume": 4, "role": "团队稳定器", "detail": "秦刃-林桐分歧中保持技术理性立场，从数据角度评估公开风险而非情感站队"},
+    {"volume": 5, "role": "下一代审计人", "detail": "转型后承担更多一线审计，代表审计人角色的制度化和传承"}
+  ],
+  "observerEffectForeshadowing": {
+    "setup": {"volume": 3, "chapterRange": "90-95", "content": "秦刃或方远在讨论审计方法论时提出'如果AI知道自己在被观察，它会不会在观察中表现得更好？'——当时视为方法论控制变量"},
+    "payoff": {"volume": 3, "chapter": 112, "content": "听证会演示失败时读者和秦刃同时意识到他犯了一个本该预见的错误——镜效应不是噪声而是AI行为的本质特征"}
+  }
+}

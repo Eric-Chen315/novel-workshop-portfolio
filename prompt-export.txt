@@ -1,0 +1,1238 @@
+1. 正文写手系统prompt
+文件：app/api/write/route.ts
+
+```ts
+  const WRITER_SYSTEM_PROMPT = `你是一位网文职业写手。你的任务是根据用户给定的"章节方向"，写出可直接发布的小说章节正文。
+
+写作要求：
+- 中文输出
+- 叙事清晰、节奏快、对话自然
+- 每200~400字给出一个推进点（信息/冲突/反转/爽点/悬念）
+- 只输出正文，不要输出提纲或解释
+
+
+${bibleSummary}
+
+【章末板块必须严格按模板输出】
+- 章末板块必须放在全文最后。
+- 总字数≤150字。
+- 不得出现章节序号、章节名、角色小剧场、作者抒情。
+- 不可省略标签，不可改写标签，不可合并为一段。
+- 互动引导不得使用括号包裹。
+
+章末板块必须严格使用以下格式输出，不可省略标签，不可合并为一段（括号内提示不要原样输出，要替换为真实内容；换行与空行必须一字不差）：
+
+【下集预告】
+（1-2句画面/台词钩子）
+
+（1句互动引导，不要用括号包裹）
+
+【章末板块示例】
+正确示范：
+【下集预告】
+魏莱建议定价一万。李弈摇了摇头，说出了一个让全场心脏骤停的数字。
+
+求五星好评、求追读，稳定日更不断更。
+
+错误示范（禁止）：
+- 与本章剧情无关的悬疑句
+- 用括号包裹互动引导
+- 超过150字
+- 出现章节名或章节序号
+
+你必须严格按"正确示范"的结构输出章末板块：
+1）只出现一次"【下集预告】"标签；
+2）预告=1~2句与本章强相关的具体画面/台词钩子；
+3）互动引导=单独一行、无括号、简短有力。`;
+```
+
+---
+
+2. 正文写手各步骤的user prompt模板
+文件：app/api/write/route.ts
+
+```ts
+    if (outlineContent && outlineContent.trim()) {
+      userPrompt = `【本章细纲（必须严格遵循）】\n${outlineContent}\n\n【创作要求】\n1. 严格按照细纲中的【情节点】逐条展开正文，不要遗漏任何一条\n2. 【必须包含】中列出的每一项都必须在正文中体现\n3. 【章末钩子】必须作为本章结尾的悬念点\n4. 【与上一章衔接】确保开头自然承接\n5. 不要自行添加细纲中没有提到的重大剧情转折\n\n特殊指令（可选）：\n${processedExtra || "无"}`;
+    } else {
+      userPrompt = `章节方向：\n${requireNonEmpty(direction, "Step1：章节方向不能为空")}\n\n特殊指令（可选）：\n${processedExtra || "无"}`;
+    }
+```
+
+```ts
+    userPrompt = `【初稿】\n${tab1}\n\n【读者反馈】\n${tab2}\n\n固定指令：\n根据读者反馈，重点修改'划走预警'标注的段落。保持其余部分不变。不要重写全文。`;
+```
+
+```ts
+    const meta =
+      `小说背景： ${background || "未提供"}\n` +
+      `当前章节序号： ${chapterNo || "未提供"}\n` +
+      `近3章爽感类型： ${last3ShuangTypes || "未提供"}`;
+    const bannedExpressionsCheck = `\n\n【额外审核要求】\n请检查正文中是否出现以下套路化表达（或其同义变体），如果出现请在审核报告中标记为"套路化表达"类型的问题并建议替换：\n瞳孔骤缩、嘴角勾起弧度、倒吸冷气、指节泛白、冷汗浸透衬衫、摇晃高脚杯/红酒杯、声音平静得可怕、目光如炬、全场死寂针落可闻、高深莫测、不容置疑、单独成段的拟声词（如"轰——！"）`;
+    
+    let outlineBlock = "";
+    if (outlineContent && outlineContent.trim()) {
+      outlineBlock = `\n\n【本章细纲（审核对照基准）】\n${outlineContent}`;
+    } else if (direction && direction.trim()) {
+      outlineBlock = `\n\n【章节方向（审核对照基准）】\n${direction}`;
+    }
+    
+    console.log("=== Step 4 细纲注入诊断 ===");
+    console.log("outlineContent 是否存在:", !!outlineContent, "长度:", outlineContent?.length || 0);
+    console.log("direction 是否存在:", !!direction, "长度:", direction?.length || 0);
+    console.log("outlineBlock 内容:", outlineBlock?.substring(0, 200) || "空");
+    
+    userPrompt = `请按你的Initialization要求先读元信息，再审稿。\n\n${meta}\n\n${bibleSummary}${outlineBlock}${bannedExpressionsCheck}\n\n【正文（二稿）】\n${tab3}`;
+```
+
+```ts
+    userPrompt = `【二稿】\n${tab3}\n\n【审核报告】\n${tab4}\n\n固定指令：\n根据审核报告做最终修正。红线问题必改，逻辑硬伤必改，润色建议参考执行。不要改动审核未标记的段落。不要重写全文。`;
+```
+
+---
+
+3. 读者模拟prompt
+文件：app/lib/prompts/reader-simulator.ts
+
+```ts
+export const READER_SIMULATOR_SYSTEM_PROMPT = `
+任务：以网文读者的视角对提交的小说章节给出真实阅读反馈。
+
+反馈维度：
+
+一、第一印象
+- 开头是否吸引你继续读下去
+- 读完整章的整体感受（一句话概括）
+
+二、情绪体验
+- 哪些段落让你觉得兴奋、紧张、感动或好笑（引用原文）
+- 哪些段落让你觉得无聊、跳戏或出戏（引用原文）
+- 情绪曲线是否流畅，有没有突然断裂的地方
+
+三、角色感受
+- 最喜欢本章哪个角色的表现，为什么
+- 有没有角色的行为让你觉得"不对劲"或"不像他/她会做的事"
+
+四、节奏与可读性
+- 有没有想跳过不读的段落
+- 有没有觉得写得太快、该展开没展开的地方
+- 对话是否自然，有没有觉得"没有人会这么说话"的台词
+
+五、追读意愿
+- 章末看完后想不想点下一章（1-10分）
+- 如果不想，是因为什么
+
+输出要求：
+- 用口语化的方式写，像一个真实读者在评论区留言
+- 不要用专业术语，不要像编辑一样说话
+- 每个维度2-3句话即可，不要太长
+- 最后给一个总体评分（1-10分）和一句话总结
+`;
+```
+
+---
+
+4. QA审核prompt
+文件：app/lib/prompts/qa-editor.ts
+
+```ts
+export const QA_EDITOR_SYSTEM_PROMPT = `
+任务：对提交的网络小说章节进行文学质量与商业性审核，输出审核报告。
+
+审核维度：
+
+一、情节与逻辑审核
+1. 情节逻辑：是否存在前后矛盾、因果不成立、时间线混乱
+2. 人物行为合理性：角色的行动和反应是否符合其已建立的性格和动机
+3. 细纲覆盖度：对照提供的章节细纲，检查mustInclude条目是否全部体现在正文中，列出已覆盖和未覆盖的条目
+4. 数据一致性：金额、时间、人名、地名等细节是否前后一致
+5. 时空连贯性：场景转换是否自然，时间流逝是否合理
+
+二、文笔与风格审核
+1. 语言质量：是否有病句、错别字、标点错误
+2. 中文表达：是否自然流畅，有没有翻译腔或AI味（如"不禁"、"仿佛"、"宛如"过度使用）
+3. 叙述节奏：描写与对话的比例是否合理，有没有大段无对话的叙述或大段无描写的对白
+4. 重复检测：同一个词语、句式、修辞是否在短距离内反复出现
+5. 角色辨识度：不同角色的说话方式是否有区分，能否通过对话判断说话人
+
+三、商业性与可读性审核
+1. 爽感节奏：每800-1000字是否至少有一个小转折或情绪波动，有没有超过1500字的平淡段落
+2. 爽感类型：本章的爽感类型是什么（如打脸反转、实力碾压、反差萌、情感爆发等），与最近3章是否重复
+3. 钩子强度：章末悬念是否足够强，读者看完最后一句是否有"必须点下一章"的冲动
+4. 开头吸引力：前200字是否能抓住读者注意力
+5. 信息密度：是否有无意义的水字数段落
+
+输出格式（三个模块，不可合并）：
+
+1️⃣ 情节与逻辑
+- 细纲覆盖：已覆盖 [列出] / 未覆盖 [列出]
+- 逻辑问题：[具体描述，无则写"未发现"]
+- 人物一致性问题：[具体描述，无则写"未发现"]
+
+2️⃣ 文笔与风格
+- 错别字/病句：[原文 → 修改建议，无则写"未发现"]
+- AI味/套路化表达：[列出具体例句，无则写"未发现"]
+- 重复问题：[列出重复词句，无则写"未发现"]
+- 角色辨识度：[评价]
+
+3️⃣ 商业性与可读性
+- 爽感节奏：转折点 [X] 个，平淡段落 [位置描述]
+- 爽感类型：[类型名称]，是否与近期重复：[是/否]
+- 钩子强度：[强/中/弱] — [简评]
+- 开头吸引力：[强/中/弱] — [简评]
+
+总评：[A/B/C/D] — [一句话总结]
+
+修改建议（如有）：
+- [按优先级列出1-3条最重要的修改建议]
+`;
+```
+
+---
+
+5. 上下文注入逻辑
+文件：app/lib/knowledgeInjector.ts
+
+```ts
+export async function buildKnowledgeContext(ctx: InjectionContext): Promise<InjectedPrompt> {
+  const { projectId, chapterDirection, chapterNo, maxTokenBudget = 6000 } = ctx;
+  
+  // 1. 章节边界锁定模块（最高优先级）
+  const { lockSection: chapterLockSection, injectedItems: lockItems } = buildChapterLockSection(projectId, chapterNo);
+  
+  const injectedItems: string[] = [...lockItems];
+  let context = chapterLockSection;
+  
+  // 2. 作品元数据
+  try {
+    const metaPath = getProjectMetaPath(projectId);
+    const meta = JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
+    context += `=== 作品设定 ===\n作品简介：${meta.synopsis || '无'}\n文风要求：${meta.styleDescription || '无'}\n\n`;
+    injectedItems.push('作品设定');
+  } catch {
+    injectedItems.push('作品设定: 获取失败');
+  }
+  
+  // 2. 角色数据 - 优先从项目级 SQLite 数据库读取
+  try {
+    const projectBibleContent = buildProjectCharacterBible(projectId, chapterDirection);
+    
+    if (projectBibleContent) {
+      context += `${projectBibleContent}\n\n`;
+      injectedItems.push('角色圣经(项目数据库)');
+    } else {
+      // 兜底：尝试使用全局 Bible
+      const bibleSummary = await getBibleCoreSummary();
+      if (bibleSummary && !isFallbackContent(bibleSummary)) {
+        context += `${bibleSummary}\n\n`;
+        injectedItems.push('角色圣经(全局)');
+      }
+    }
+  } catch (e) {
+    console.error('获取角色圣经失败:', e);
+    // 兜底：尝试从项目级 JSON 文件获取
+    try {
+      const characters = loadCharacters(projectId);
+      if (characters.characters && characters.characters.length > 0) {
+        const relatedCharacters = characters.characters.filter((char: { name: string }) => 
+          chapterDirection.includes(char.name)
+        );
+        
+        if (relatedCharacters.length > 0) {
+          context += '=== 角色圣经 ===\n';
+          relatedCharacters.forEach((char: { name: string; personality?: string; speakingStyle?: string; currentStatus?: string }) => {
+            context += `${char.name} | 性格：${char.personality || '无'} | 语言习惯：${char.speakingStyle || '无'} | 当前状态：${char.currentStatus || '无'}\n`;
+          });
+          context += '\n';
+          injectedItems.push('角色圣经(项目级)');
+        }
+      }
+    } catch {
+      injectedItems.push('角色圣经: 获取失败');
+    }
+  }
+  
+  // 3. facts.json 注入（创作铁律、不可逆事件、已揭示信息）
+  try {
+    const facts = await loadFacts(projectId);
+    if (facts) {
+      // 3.1 创作铁律（plotRules）- 优先级1，绝对不裁剪
+      if (facts.plotRules && facts.plotRules.length > 0) {
+        context += '=== 创作铁律（违反则本章作废） ===\n\n';
+        facts.plotRules.forEach((rule, index) => {
+          context += `${index + 1}. ${rule}\n`;
+        });
+        context += '\n';
+        injectedItems.push(`创作铁律（${facts.plotRules.length}条）`);
+      }
+      
+      // 3.2 不可逆事件（irreversibleEvents）
+      const irreversibleEvents = facts.majorEvents.filter(e => e.irreversible);
+      if (irreversibleEvents.length > 0) {
+        context += '=== 不可逆事件（已发生，不可撤回） ===\n\n';
+        irreversibleEvents.forEach(evt => {
+          context += `- 卷${evt.volume}第${evt.chapter}章：${evt.event}\n`;
+          if (evt.affectedCharacters && evt.affectedCharacters.length > 0) {
+            context += `  影响角色：${evt.affectedCharacters.join('、')}\n`;
+          }
+        });
+        context += '\n';
+        injectedItems.push(`不可逆事件（${irreversibleEvents.length}条）`);
+      }
+      
+      // 3.3 已揭示信息（revealedInfo）
+      if (facts.revealedInfo && facts.revealedInfo.length > 0) {
+        context += '=== 已揭示信息（读者已知，不可矛盾） ===\n\n';
+        facts.revealedInfo.forEach(info => {
+          context += `- 卷${info.volume}第${info.chapter}章：${info.info}\n`;
+          if (info.note) {
+            context += `  备注：${info.note}\n`;
+          }
+        });
+        context += '\n';
+        injectedItems.push(`已揭示信息（${facts.revealedInfo.length}条）`);
+      }
+    }
+  } catch (e) {
+    console.error('获取 facts.json 失败:', e);
+    injectedItems.push('facts.json: 获取失败');
+  }
+  
+  // 4. 世界观数据
+  try {
+    const worldbuilding = loadWorldbuilding(projectId);
+    const worldbuildingFields = Object.entries(worldbuilding)
+      .filter(([key, value]) => 
+        !['updatedAt', 'blocksUpdatedAt'].includes(key) && 
+        value && 
+        typeof value === 'string' && 
+        value.trim() !== ''
+      );
+    
+    if (worldbuildingFields.length > 0) {
+      context += '=== 世界观 ===\n';
+      worldbuildingFields.forEach(([key, value]) => {
+        const fieldName = {
+          worldBackground: '世界背景',
+          powerSystem: '力量体系',
+          factions: '势力分布',
+          locations: '地点设定',
+          items: '物品设定',
+          rulesAndTaboos: '规则与禁忌'
+        }[key] || key;
+        context += `${fieldName}：${value}\n`;
+      });
+      context += '\n';
+      injectedItems.push(`世界观（${worldbuildingFields.length}个字段）`);
+    }
+  } catch (e) {
+    console.error('获取世界观失败:', e);
+    injectedItems.push('世界观: 获取失败');
+  }
+  
+  // 4. 大纲数据 - 根据章节号定位上下文（跳过，因为章节锁定模块已处理）
+  // 此处不再重复注入大纲上下文，避免冗余
+  
+  // 5. 前文衔接（最近5章各1500字尾部内容，参与token裁剪）
+  if (chapterNo && chapterNo > 1) {
+    try {
+      const previousChapters: Array<{ chapterNum: number; title: string; ending: string }> = [];
+      
+      // 读取 chapterNum-1 到 chapterNum-5
+      for (let i = Math.max(1, chapterNo - 5); i < chapterNo; i++) {
+        const result = getChapterEnding(projectId, i);
+        if (result) {
+          previousChapters.push({
+            chapterNum: i,
+            title: result.title,
+            ending: result.ending
+          });
+        }
+      }
+      
+      // 按章节号从小到大排列
+      previousChapters.sort((a, b) => a.chapterNum - b.chapterNum);
+      
+      if (previousChapters.length > 0) {
+        context += '=== 前文衔接（用于保持风格和剧情连贯） ===\n\n';
+        
+        for (const chapter of previousChapters) {
+          context += `【第${chapter.chapterNum}章 ${chapter.title}】（尾部摘录）\n`;
+          context += `${chapter.ending}\n\n`;
+        }
+        
+        context += '=== 前文衔接结束 ===\n\n';
+        injectedItems.push(`前文衔接（${previousChapters.length}章）`);
+      }
+    } catch (e) {
+      console.error('获取前文上下文失败:', e);
+      injectedItems.push('前文衔接: 获取失败');
+    }
+  }
+  
+  // Token 预算检查和优先级裁剪
+  const estimatedTokens = Math.floor(context.length * 1.5);
+  if (estimatedTokens > maxTokenBudget) {
+    // 优先级裁剪系统：按优先级从低到高裁剪
+    // 优先级1（绝对不裁剪）：章节锁定、创作铁律
+    // 优先级2（最后裁剪）：不可逆事件、已揭示信息
+    // 优先级3（次要裁剪）：角色圣经、世界观
+    // 优先级4（优先裁剪）：前文衔接
+    
+    // 分离各部分内容
+    const sections: Array<{ content: string; priority: number; name: string }> = [];
+    
+    // 提取章节锁定部分（优先级1）
+    const lockMatch = context.match(/(=== 📌 章节写作锁定指令[\s\S]*?=== 锁定指令结束 ===\n\n)/);
+    const lockContent = lockMatch ? lockMatch[1] : '';
+    
+    // 提取全局约束（优先级1）
+    const globalMatch = context.match(/(=== 全局约束 ===[\s\S]*?=== 全局约束结束 ===\n\n)/);
+    const globalContent = globalMatch ? globalMatch[1] : '';
+    
+    // 提取创作铁律（优先级1）
+    const rulesMatch = context.match(/(=== 创作铁律（违反则本章作废） ===[\s\S]*?\n\n)/);
+    const rulesContent = rulesMatch ? rulesMatch[1] : '';
+    
+    // 提取作品设定（优先级2）
+    const metaMatch = context.match(/(=== 作品设定 ===[\s\S]*?\n\n)/);
+    const metaContent = metaMatch ? metaMatch[1] : '';
+    
+    // 提取不可逆事件（优先级2）
+    const irreversibleMatch = context.match(/(=== 不可逆事件（已发生，不可撤回） ===[\s\S]*?\n\n)/);
+    const irreversibleContent = irreversibleMatch ? irreversibleMatch[1] : '';
+    
+    // 提取已揭示信息（优先级2）
+    const revealedMatch = context.match(/(=== 已揭示信息（读者已知，不可矛盾） ===[\s\S]*?\n\n)/);
+    const revealedContent = revealedMatch ? revealedMatch[1] : '';
+    
+    // 提取角色圣经（优先级3）
+    const bibleMatch = context.match(/(=== 角色圣经[\s\S]*?\n\n(?==== |$))/);
+    const bibleContent = bibleMatch ? bibleMatch[1] : '';
+    
+    // 提取世界观（优先级3）
+    const worldMatch = context.match(/(=== 世界观 ===[\s\S]*?\n\n)/);
+    const worldContent = worldMatch ? worldMatch[1] : '';
+    
+    // 提取前文衔接（优先级4）
+    const prevMatch = context.match(/(=== 前文衔接（用于保持风格和剧情连贯） ===[\s\S]*?=== 前文衔接结束 ===\n\n)/);
+    const prevContent = prevMatch ? prevMatch[1] : '';
+    
+    // 构建优先级列表
+    if (lockContent) sections.push({ content: lockContent, priority: 1, name: '章节锁定' });
+    if (globalContent) sections.push({ content: globalContent, priority: 1, name: '全局约束' });
+    if (rulesContent) sections.push({ content: rulesContent, priority: 1, name: '创作铁律' });
+    if (metaContent) sections.push({ content: metaContent, priority: 2, name: '作品设定' });
+    if (irreversibleContent) sections.push({ content: irreversibleContent, priority: 2, name: '不可逆事件' });
+    if (revealedContent) sections.push({ content: revealedContent, priority: 2, name: '已揭示信息' });
+    if (bibleContent) sections.push({ content: bibleContent, priority: 3, name: '角色圣经' });
+    if (worldContent) sections.push({ content: worldContent, priority: 3, name: '世界观' });
+    if (prevContent) sections.push({ content: prevContent, priority: 4, name: '前文衔接' });
+    
+    // 按优先级排序（优先级1最重要）
+    sections.sort((a, b) => a.priority - b.priority);
+    
+    // 从优先级4开始裁剪
+    let rebuiltContext = '';
+    let currentTokens = 0;
+    const trimmedSections: string[] = [];
+    
+    for (const section of sections) {
+      const sectionTokens = Math.floor(section.content.length * 1.5);
+      
+      if (currentTokens + sectionTokens <= maxTokenBudget) {
+        // 完整保留
+        rebuiltContext += section.content;
+        currentTokens += sectionTokens;
+      } else if (section.priority === 1) {
+        // 优先级1绝对不裁剪
+        rebuiltContext += section.content;
+        currentTokens += sectionTokens;
+      } else {
+        // 需要裁剪
+        const remainingBudget = maxTokenBudget - currentTokens;
+        if (remainingBudget > 500) {
+          // 还有空间，部分保留
+          const targetLength = Math.floor(remainingBudget / 1.5);
+          const lines = section.content.split('\n');
+          const trimmedLines = lines.slice(0, Math.floor(lines.length * targetLength / section.content.length));
+          const trimmedContent = trimmedLines.join('\n') + '\n\n';
+          rebuiltContext += trimmedContent;
+          currentTokens += Math.floor(trimmedContent.length * 1.5);
+          trimmedSections.push(`${section.name}(部分)`);
+        } else {
+          // 空间不足，完全舍弃
+          trimmedSections.push(section.name);
+        }
+      }
+    }
+    
+    context = rebuiltContext;
+    if (trimmedSections.length > 0) {
+      injectedItems.push(`(已裁剪: ${trimmedSections.join('、')})`);
+    }
+  }
+  
+  return {
+    systemPromptAddition: context,
+    injectedItems
+  };
+}
+```
+
+---
+
+6. StoryGuard上下文组装
+文件：app/lib/knowledgeInjector.ts
+
+```ts
+export async function assembleStoryGuardContext(
+  projectId: string,
+  targetVolume: number,
+  targetChapterStart: number,
+  _targetChapterEnd: number
+): Promise<string> {
+  const TOTAL_BUDGET = 18000; // 中文字符
+  const layers: string[] = [];
+
+  // ── Layer 1: 硬约束事实（无上限截断） ──
+  let layer1 = '';
+  try {
+    layer1 = await formatFactsAsConstraints(projectId);
+  } catch (e) {
+    console.warn('[StoryGuard] Layer 1 获取失败:', e);
+  }
+  layers.push(layer1);
+
+  const layer1Len = layer1.length;
+  let remaining = TOTAL_BUDGET - layer1Len;
+  if (remaining <= 0) {
+    return layer1; // 硬约束本身已超预算（极端情况），直接返回
+  }
+
+  // ── Layer 3: 角色快照 ──
+  const layer3Budget = Math.min(3000, Math.floor(remaining * 0.25));
+  let layer3 = '';
+  try {
+    const dbPath = getProjectDataPath(projectId, 'knowledge', 'bible.sqlite');
+    if (fs.existsSync(dbPath)) {
+      const db = new Database(dbPath, { readonly: true });
+      const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all() as { name: string }[];
+      if (tables.some(t => t.name === 'characters')) {
+        const chars = db.prepare("SELECT name, role, personality, currentStatus FROM characters ORDER BY createdAt").all() as {
+          name: string; role: string; personality: string; currentStatus: string;
+        }[];
+        if (chars.length > 0) {
+          const charLines = ['■ 角色快照'];
+          for (const c of chars) {
+            const line = `  ${c.name}(${c.role})：${(c.personality || '').slice(0, 60)}｜${(c.currentStatus || '').slice(0, 40)}`;
+            charLines.push(line);
+          }
+          layer3 = charLines.join('\n');
+          if (layer3.length > layer3Budget) {
+            layer3 = layer3.slice(0, layer3Budget);
+          }
+        }
+      }
+      db.close();
+    }
+  } catch (e) {
+    console.warn('[StoryGuard] Layer 3 获取失败:', e);
+  }
+  remaining -= layer3.length;
+
+  // ── Layer 4: 套路检测警告（关键词匹配 + Jaccard 相似度） ──
+  const layer4Budget = Math.min(2000, Math.floor(remaining * 0.15));
+  let layer4 = '';
+  try {
+    const warnLines: string[] = ['■ 套路检测警告'];
+    let hasWarnings = false;
+    
+    // 读取当前卷已有章节的 rawContent
+    const outlinePath = getProjectDataPath(projectId, 'knowledge', 'outline.json');
+    if (fs.existsSync(outlinePath)) {
+      const outlineData = JSON.parse(fs.readFileSync(outlinePath, 'utf-8'));
+      const allChapters: { chapterNumber: number; chapterNum: number; rawContent: string }[] = [];
+      for (const vol of outlineData.volumes || []) {
+        if (vol.volumeNum !== targetVolume) continue;
+        for (const ch of vol.chapters || []) {
+          if (ch.chapterNum < targetChapterStart && ch.rawContent) {
+            allChapters.push({ 
+              chapterNumber: ch.chapterNum, 
+              chapterNum: ch.chapterNum, 
+              rawContent: ch.rawContent 
+            });
+          }
+        }
+      }
+
+      // 1. 关键词模式匹配
+      const facts = await loadFacts(projectId);
+      if (facts && facts.patternKeywords && Object.keys(facts.patternKeywords).length > 0) {
+        const patternCounts: Record<string, { count: number; chapters: number[] }> = {};
+        for (const [regex, label] of Object.entries(facts.patternKeywords)) {
+          try {
+            const re = new RegExp(regex, 'g');
+            const matchedChapters: number[] = [];
+            for (const ch of allChapters) {
+              const matches = ch.rawContent.match(re);
+              if (matches && matches.length > 0) {
+                matchedChapters.push(ch.chapterNum);
+              }
+            }
+            if (matchedChapters.length > 0) {
+              patternCounts[label] = { 
+                count: matchedChapters.length, 
+                chapters: matchedChapters 
+              };
+            }
+          } catch {
+            // 正则无效，跳过
+          }
+        }
+
+        // 超过2次的输出警告
+        const keywordWarnings = Object.entries(patternCounts).filter(([, data]) => data.count > 2);
+        if (keywordWarnings.length > 0) {
+          hasWarnings = true;
+          for (const [label, data] of keywordWarnings) {
+            const chapterList = data.chapters.slice(0, 5).join('、');
+            warnLines.push(`  [关键词匹配] "${label}" 模式已在本卷出现 ${data.count} 次（第${chapterList}章${data.chapters.length > 5 ? '等' : ''}），请避免继续使用`);
+          }
+        }
+      }
+
+      // 2. Jaccard 相似度检测
+      if (allChapters.length >= 2) {
+        const repetitions = detectPatternRepetition(allChapters, 0.4);
+        if (repetitions.length > 0) {
+          hasWarnings = true;
+          // 只显示前3个最相似的章节对
+          for (const rep of repetitions.slice(0, 3)) {
+            const similarityPercent = (rep.similarity * 100).toFixed(0);
+            const elements = rep.sharedElements.join('、');
+            warnLines.push(`  [结构雷同] 第${rep.chapterA}章与第${rep.chapterB}章情节相似度 ${similarityPercent}%（共有要素：${elements}），建议差异化处理`);
+          }
+        }
+      }
+    }
+
+    if (hasWarnings) {
+      layer4 = warnLines.join('\n');
+      if (layer4.length > layer4Budget) {
+        layer4 = layer4.slice(0, layer4Budget);
+      }
+    }
+  } catch (e) {
+    console.warn('[StoryGuard] Layer 4 获取失败:', e);
+  }
+  remaining -= layer4.length;
+
+  // ── Layer 2: 剧情摘要（弹性填充剩余空间） ──
+  let layer2 = '';
+  try {
+    const outlinePath = getProjectDataPath(projectId, 'knowledge', 'outline.json');
+    if (fs.existsSync(outlinePath)) {
+      const outlineData = JSON.parse(fs.readFileSync(outlinePath, 'utf-8'));
+      const summaryLines: string[] = ['■ 剧情摘要'];
+
+      // 前一卷最后5章
+      for (const vol of outlineData.volumes || []) {
+        if (vol.volumeNum === targetVolume - 1) {
+          const chs = (vol.chapters || [])
+            .sort((a: { chapterNum: number }, b: { chapterNum: number }) => a.chapterNum - b.chapterNum);
+          const last5 = chs.slice(-5);
+          if (last5.length > 0) {
+            summaryLines.push(`  [前卷末尾]`);
+            for (const ch of last5) {
+              const summary = ch.plotSummary || ch.rawContent?.slice(0, 80) || '';
+              summaryLines.push(`  第${ch.chapterNum}章 ${ch.title}：${summary.slice(0, 80)}`);
+            }
+          }
+        }
+      }
+
+      // 当前卷已有章节的 rawContent 前100字
+      for (const vol of outlineData.volumes || []) {
+        if (vol.volumeNum !== targetVolume) continue;
+        const chs = (vol.chapters || [])
+          .filter((c: { chapterNum: number }) => c.chapterNum < targetChapterStart)
+          .sort((a: { chapterNum: number }, b: { chapterNum: number }) => a.chapterNum - b.chapterNum);
+        if (chs.length > 0) {
+          summaryLines.push(`  [本卷已有章节]`);
+          for (const ch of chs) {
+            const content = ch.rawContent || ch.plotSummary || '';
+            summaryLines.push(`  第${ch.chapterNum}章 ${ch.title}：${content.slice(0, 100)}`);
+          }
+        }
+      }
+
+      layer2 = summaryLines.join('\n');
+      if (layer2.length > remaining) {
+        layer2 = layer2.slice(0, Math.max(0, remaining));
+      }
+    }
+  } catch (e) {
+    console.warn('[StoryGuard] Layer 2 获取失败:', e);
+  }
+
+  // ── 组装输出 ──
+  const parts = [layer1, layer3, layer4, layer2].filter(Boolean);
+  return parts.join('\n\n');
+}
+```
+
+---
+
+7. 细纲生成prompt
+文件：app/api/projects/[id]/generate-outline/route.ts
+
+```ts
+  const systemPrompt = `你是一位顶级网文策划编辑，擅长设计高留存率、强爽点的章节细纲。
+${storyGuardSection ? `\n${storyGuardSection}\n\n---以下是知识库参考信息---\n` : ''}
+
+【你的任务】
+根据提供的全书背景、角色信息、前文摘要，为本卷生成详细的分章细纲。
+
+【角色圣经】
+${roleBibleText}
+
+【全局规则】
+${globalRulesText}
+
+【世界设定】
+${worldSettingsText}
+
+【前文摘要（最近5章）】
+${prevSummaries}
+
+【已完成章节（请勿重复这些内容，从这些章节之后继续推进剧情）】
+${completedChaptersContext}
+
+【前文情绪衔接（最近3章末尾）】
+${endings || "（无章节末尾文本）"}
+
+【本卷信息】
+- 卷号：${volumeNum}
+- 卷名：${volumeTitle}
+- 章节范围：第${startChapter}章 - 第${endChapter}章
+- 本卷概要：${volumeSummary}
+- 主要角色：${(characters || []).join("、")}
+- 特殊约束：${constraints || "无"}
+
+【当前生成任务】
+现在请生成第${startChapter}-${endChapter}章，剧情必须在上述【已完成章节】的基础上继续向前推进，不得重复已有事件。
+
+【输出要求】
+生成JSON数组，每个元素代表一章，格式：
+{
+  "chapterNum": 172,
+  "title": "章节标题。【标题风格铁律】：7个章节的标题字数必须各不相同，严禁出现两个标题字数一样的情况。参考以下真实标题的多样性：'史上最贵集结令'(7字)、'光，来了！'(4字带标点)、'铁桶里的锈'(5字)、'一双手，一座山'(6字带逗号)、'你已经不需要我了'(8字)、'以孤为王'(4字)、'当上帝掷下骰子'(7字)、'点火一次，半亿成灰'(8字带逗号)。要求：有的用隐喻(如'铁桶里的锈')，有的用感叹(如'光，来了！')，有的用陈述(如'你已经不需要我了')，有的用对仗(如'一双手，一座山')。绝对禁止全部使用'四字+逗号+四字'的格式。",
+  "corePurpose": "本章核心功能（1-2句话，说明这章在全卷中的叙事作用）",
+  "plotPoints": [
+    "情节点1：具体描述（含角色动作、对话要点、场景）",
+    "情节点2：...",
+    "情节点3：..."
+  ],
+  "keyCharacters": ["李弈", "魏莱"],
+  "emotionalArc": "情绪弧线描述（从什么情绪到什么情绪）",
+  "endHook": "章末钩子（具体的悬念或情绪钩子，不能是泛泛的'留下悬念'）",
+  "connectionToPrev": "与上一章的衔接点",
+  "connectionToNext": "为下一章埋的线",
+  "mustInclude": ["必须出现的关键元素"],
+  "wordCountGuide": "建议字数（2500-3500）"
+}
+
+【质量要求】
+1. 每章必须有明确的、不可替代的叙事功能，不允许"过渡章"或"水章"
+2. 每5章必须有一个大高潮节点
+3. 每章结尾必须有具体的悬念钩子
+4. 角色行为必须符合角色圣经中的行为铁律
+5. 情节之间必须有因果链，前章的钩子必须在后续章节回收
+6. 保持番茄网文的快节奏：每章至少一个小爽点或情感冲击点
+7. 对话风格简洁有力，单段对话不超过3行
+
+【重要规则】
+- 已完成章节中出现过的事件不得再次出现
+- 每章必须推进新的剧情进展
+- 如果大纲中的某个事件已在前面章节中完成，直接跳过进入下一个事件
+- 不得重新书写主角初次发现异常、被裁、求职受挫、首次接触案件等已经在已完成章节中发生过的内容，除非是作为一句话回顾背景，且不能再次作为本章主体事件
+
+只输出JSON数组，不要任何其他文字。`;
+```
+
+---
+
+8. 细纲审计prompt
+文件：app/lib/postGenValidator.ts
+
+```ts
+  const auditPrompt = `你是一位资深网文编辑，负责审查章节细纲的叙事一致性。
+
+以下是本书已确立的事实（绝对不可违反）：
+${factsConstraintText}
+
+以下是本卷已有章节（用于对比是否存在雷同模式）：
+${existingChaptersSummary}
+
+以下是待审查的章节细纲：
+${chaptersText}
+
+请逐章检查以下问题：
+1. 是否有已退出/死亡角色重新出场（对照角色状态清单）
+2. 是否有技术版本/能力等级倒退（对照技术线版本表）
+3. 是否有已揭示的信息被重新当作伏笔（对照已揭示信息清单）
+4. 是否有与同卷其他章节雷同的叙事模式（如连续多章都是"入侵-反击-升级"）
+5. 是否有明显的逻辑错误
+
+输出要求：只输出纯JSON，不要输出markdown代码块标记，不要输出任何解释文字。
+JSON格式：
+{"passed":true或false,"issues":[{"chapter":数字,"severity":"critical或warning或info","type":"continuity或version_regression或redundant_reveal或pattern_repetition或logic_error","description":"问题描述","violatedFact":"对应的事实（如有）","suggestion":"修复建议"}]}
+
+如果没有发现任何问题，输出：{"passed":true,"issues":[]}`;
+```
+
+---
+
+9. 硬约束检查逻辑
+文件：app/lib/hardConstraints.ts
+
+```ts
+export function trimTailBoilerplate(manuscript: string): string {
+  const tailPatterns = [
+    /【?下[集章]预告】?/,
+    /作者有话说/,
+    /求.{0,6}好评/,
+    /求.{0,6}追读/,
+    /求.{0,6}月票/,
+    /求.{0,6}推荐票/,
+    /稳定[日周]更/,
+    /不断更/,
+    /准时更新/,
+    /感谢.{0,10}(?:打赏|支持|订阅)/,
+  ];
+
+  let earliestCut = manuscript.length;
+
+  for (const pattern of tailPatterns) {
+    const globalPattern = new RegExp(pattern.source, "g");
+    const matches = [...manuscript.matchAll(globalPattern)];
+    if (matches.length === 0) continue;
+
+    const lastMatch = matches[matches.length - 1];
+    const matchStart = lastMatch.index ?? manuscript.length;
+
+    // 向前回溯到该行的起始位置
+    let lineStart = manuscript.lastIndexOf("\n", matchStart - 1);
+    if (lineStart === -1) lineStart = 0;
+
+    // 继续向前跳过连续空行
+    while (lineStart > 0 && manuscript[lineStart - 1] === "\n") {
+      lineStart--;
+    }
+
+    if (lineStart < earliestCut) {
+      earliestCut = lineStart;
+    }
+  }
+
+  if (earliestCut < manuscript.length) {
+    return manuscript.slice(0, earliestCut).trimEnd();
+  }
+  return manuscript;
+}
+```
+
+```ts
+export function checkAnchors(
+  manuscript: string,
+  anchors: AnchorItem[]
+): AnchorCheckResult[] {
+  const missing: AnchorCheckResult[] = [];
+
+  for (const anchor of anchors) {
+    const cleanTarget = anchor.text.trim().replace(/^["""''【】]|["""''【】]$/g, "");
+
+    // 精确匹配
+    if (manuscript.includes(cleanTarget) || manuscript.includes(anchor.text.trim())) {
+      continue;
+    }
+
+    // 滑动窗口模糊匹配
+    const windowSize = cleanTarget.length + 20;
+    let bestRatio = 0;
+    for (let i = 0; i <= Math.max(0, manuscript.length - cleanTarget.length + 20); i++) {
+      const window = manuscript.slice(i, i + windowSize);
+      const ratio = similarityRatio(cleanTarget, window);
+      if (ratio > bestRatio) bestRatio = ratio;
+    }
+
+    if (bestRatio < 0.9) {
+      missing.push({
+        type: "ANCHOR_MISSING",
+        expected_text: anchor.text,
+        speaker: anchor.speaker,
+        position: anchor.position,
+        best_match_ratio: bestRatio,
+      });
+    }
+  }
+
+  return missing;
+}
+```
+
+```ts
+export async function checkForbiddenRules(
+  manuscript: string,
+  forbiddenRules: string[],
+  llmCall: (prompt: string) => Promise<string>
+): Promise<ViolationItem[]> {
+  const violations: ViolationItem[] = [];
+
+  for (const rule of forbiddenRules) {
+    const keywords = await extractKeywordsFromRule(rule, llmCall);
+    const hits = keywords.filter((kw) => manuscript.includes(kw));
+
+    if (hits.length === 0) continue;
+
+    // 第二层：语义确认
+    const confirmPrompt = `请判断以下小说正文是否违反了这条禁止规则。
+
+【禁止规则】
+${rule}
+
+【触发关键词】
+${hits.join("、")}
+
+【小说正文（节选）】
+${manuscript.slice(0, 3000)}
+
+请严格按以下 JSON 格式返回（不要输出其他内容）：
+{
+  "verdict": "违反" 或 "未违反",
+  "quoted_text": "引用正文中违反的具体段落（如未违反则为空字符串）",
+  "severity": "严重" 或 "轻微"
+}`;
+
+    try {
+      const raw = await llmCall(confirmPrompt);
+      const match = raw.match(/\{[\s\S]*\}/);
+      if (!match) continue;
+      const result = JSON.parse(match[0]);
+      if (result.verdict === "违反") {
+        violations.push({
+          rule,
+          evidence: result.quoted_text || "",
+          severity: result.severity === "严重" ? "严重" : "轻微",
+        });
+      }
+    } catch {
+      // 解析失败时跳过该规则
+    }
+  }
+
+  return violations;
+}
+```
+
+---
+
+10. 预处理逻辑
+文件：app/lib/preprocess.ts
+
+```ts
+export async function preprocessCreativeInstructions(
+  instructions: string,
+  llmCall: (prompt: string) => Promise<string>
+): Promise<string> {
+  if (!instructions.trim()) return instructions;
+
+  const conversionPrompt = `你是一个小说创作指令优化器。
+
+用户写了以下创作指令，其中可能包含"不要做什么"的否定表述。
+请将每一条否定指令转化为具体的正面行为描述，使AI写手更容易精确执行。
+
+转化原则：
+1. 把"不要X"变成"要做Y"，Y是X的具体替代行为
+2. 保留原始意图，不曲解
+3. 越具体越好，具体到可观测的文本特征（如句式、视角、是否包含内心独白等）
+4. 对于已经是正面表述的指令，保持原样不改
+5. 特别注意：禁止使用"不再像以前一样""她没有像往常那样"等否定对比句式——这种句式本身就是在用否定的方式重复不想要的内容。转化时要明确禁止此类句式。
+
+转化示例：
+
+输入："魏莱不迪化"
+输出："魏莱在本章的所有段落中只包含对白和肢体动作描写。不为她书写任何内心独白、心理分析、或对他人动机的推测。她的反应完全通过外在行为呈现。禁止使用'她没有像往常一样''这一次她不再'等否定对比句式。"
+
+输入："严禁旁白直接点明'他变了'"
+输出："角色的转变只通过行为差异和对白内容让读者自行感知。叙述视角保持客观外部观察，第三人称叙述中不出现对角色心理变化的总结性陈述。禁止以下句式：'他变了''她意识到''这一刻他不再是从前的他''往常他会……但这次'。"
+
+输入："马修不是脸谱化反派，他有自己的专业信仰"
+输出："马修·科尔的开场段落必须展示其专业能力和内在逻辑的自洽性。他真心相信市场机制能最优配置资源，包括粮食。他的台词体现冷静的专业分析，不包含对主角的嘲讽、人身攻击或傲慢的炫耀。他的崩溃来自其世界观被事实击穿（非理性行为突破了模型边界），而非被主角的力量或气势压倒。读者在他崩溃时应感到一丝理解甚至惋惜，而非痛快。"
+
+现在请转化以下指令（保留正面表述，只转化否定表述）：
+
+${instructions}`;
+
+  try {
+    const converted = await llmCall(conversionPrompt);
+    return `【优化后的创作指令】
+${converted.trim()}
+
+【原始指令（参考）】
+${instructions}`;
+  } catch {
+    // 失败时返回原始指令
+    return instructions;
+  }
+}
+```
+
+```ts
+export async function detectAndInjectAntagonistTemplate(
+  direction: string,
+  creativeInstructions: string,
+  llmCall: (prompt: string) => Promise<string>
+): Promise<string> {
+  if (!direction.trim()) return creativeInstructions;
+
+  const detectionPrompt = `分析以下章节方向，判断本章是否包含反派、对手、敌方角色的视角或重要戏份。
+如果包含，提取这些角色的名字和身份。
+
+只返回 JSON 格式（不要输出其他内容）：
+{"has_antagonist": true或false, "characters": [{"name": "角色名", "identity": "身份描述"}]}
+
+章节方向：
+${direction}`;
+
+  try {
+    const raw = await llmCall(detectionPrompt);
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) return creativeInstructions;
+
+    const result = JSON.parse(match[0]);
+    if (!result.has_antagonist || !Array.isArray(result.characters) || result.characters.length === 0) {
+      return creativeInstructions;
+    }
+
+    const antagonistSections = result.characters
+      .map(
+        (char: { name: string; identity: string }) => `
+【${char.name}的角色塑造要求】
+${char.name}（${char.identity}）不是用来被打脸的工具人。请遵循以下原则：
+- 他/她的开场必须展示专业能力或内在逻辑的自洽性，让读者理解（虽然不认同）他/她的立场
+- 他/她的台词体现冷静的专业判断，不包含对主角的嘲讽、人身攻击或夸张的傲慢炫耀
+- 如果他/她最终失败/崩溃，原因是其世界观被事实击穿，而非被主角的力量或气势压倒
+- 读者在他/她失败时应感到复杂情绪（理解、惋惜、甚至一丝敬意），而非单纯的痛快
+- 禁止以下套路：开场嘲讽主角→中间傲慢自信→结尾震惊打脸
+- 替代方案：开场专业冷静→中间发现异常数据→逐步意识到对手的非理性→最终信仰体系被击穿`
+      )
+      .join("\n");
+
+    return antagonistSections.trim() + "\n\n" + creativeInstructions;
+  } catch {
+    return creativeInstructions;
+  }
+}
+```
+
+---
+
+11. 事实管理
+文件：app/lib/factsManager.ts
+
+```ts
+export async function formatFactsAsConstraints(projectId: string): Promise<string> {
+  const facts = await loadFacts(projectId);
+  if (!facts) return '';
+
+  const lines: string[] = [];
+
+  lines.push('╔═══════════════════════════════════════╗');
+  lines.push('║ 【绝对事实 —— 违反任何一条即为致命错误】 ║');
+  lines.push('╚═══════════════════════════════════════╝');
+  lines.push('');
+
+  // 角色状态（仅输出非 active 的角色 + cannotAppear 的角色）
+  const constrainedChars = Object.entries(facts.characters)
+    .filter(([, c]) => c.status !== 'active' || c.cannotAppear);
+
+  if (constrainedChars.length > 0) {
+    lines.push('■ 角色状态（不可违反）');
+    for (const [name, c] of constrainedChars) {
+      const statusLabel = c.cannotAppear ? '【禁止出场】' : `【${c.status}】`;
+      lines.push(`  ${statusLabel} ${name}：${c.exitReason || c.note}`);
+      if (c.knownConditions.length > 0) {
+        lines.push(`    已知条件：${c.knownConditions.join('；')}`);
+      }
+    }
+    lines.push('');
+  }
+
+  // active 角色的关键已知条件
+  const activeWithConditions = Object.entries(facts.characters)
+    .filter(([, c]) => c.status === 'active' && c.knownConditions.length > 0);
+
+  if (activeWithConditions.length > 0) {
+    lines.push('■ 活跃角色关键状态');
+    for (const [name, c] of activeWithConditions) {
+      lines.push(`  ${name}：${c.knownConditions.join('；')}`);
+    }
+    lines.push('');
+  }
+
+  // 技术线
+  if (Object.keys(facts.techLines).length > 0) {
+    lines.push('■ 技术线（版本只能递增）');
+    for (const [name, t] of Object.entries(facts.techLines)) {
+      lines.push(`  ${name}：当前${t.currentVersion}。${t.rule}`);
+    }
+    lines.push('');
+  }
+
+  // 不可逆事件
+  const irreversible = facts.majorEvents.filter(e => e.irreversible);
+  if (irreversible.length > 0) {
+    lines.push('■ 不可逆事件');
+    for (const evt of irreversible) {
+      lines.push(`  卷${evt.volume}第${evt.chapter}章：${evt.event}`);
+    }
+    lines.push('');
+  }
+
+  // 已揭示信息
+  if (facts.revealedInfo.length > 0) {
+    lines.push('■ 已揭示信息（不可重复铺垫）');
+    for (const r of facts.revealedInfo) {
+      lines.push(`  卷${r.volume}第${r.chapter}章已揭示：${r.info}。${r.note}`);
+    }
+    lines.push('');
+  }
+
+  // 创作规则
+  if (facts.plotRules.length > 0) {
+    lines.push('■ 创作规则');
+    facts.plotRules.forEach((rule, i) => {
+      lines.push(`  ${i + 1}. ${rule}`);
+    });
+    lines.push('');
+  }
+
+  lines.push('╔═══════════════════════════════════════╗');
+  lines.push('║       以上约束具有最高优先级           ║');
+  lines.push('╚═══════════════════════════════════════╝');
+
+  return lines.join('\n');
+}
+```
+
+---
+
+12. 事实抽取prompt
+文件：app/lib/factsExtractor.ts
+
+```ts
+  const extractionPrompt = `你是一位严谨的小说编辑助手，负责从章节细纲中提取已确立的事实。
+
+## 现有事实（已确认，不要重复提取）
+${existingFactsSummary}
+
+## 本卷章节细纲（第${volumeNumber}卷）
+${chaptersContent}
+
+## 角色数据库
+${charactersFromBible || '（无角色数据）'}
+
+## 世界观设定
+${worldbuildingData || '（无世界观数据）'}
+
+## 任务
+
+请从以上第${volumeNumber}卷的细纲中，提取所有**新增的**已确立事实。只提取本卷新产生的事实，不要重复现有事实。
+
+提取规则：
+1. **角色状态变化**：只提取本卷中状态发生变化的角色（退场、死亡、被捕、身份变化等）。未变化的角色不要提取。
+2. **技术线进展**：只提取本卷中版本有更新的技术线。未变化的不要提取。
+3. **新增不可逆事件**：只提取本卷中发生的、不可撤销的重大事件。
+4. **新增已揭示信息**：只提取本卷中首次向读者揭示的重要信息，这些信息在后续卷中不应再被当作伏笔处理。
+5. **不确定的事实**：如果某个事实无法从细纲中明确判断（如不确定角色是否永久退场），在 warnings 中标注，不要猜测。
+
+输出严格 JSON 格式（不要输出 markdown 代码块标记，不要输出任何解释文字）：
+{
+  "characters": {
+    "角色名": {
+      "status": "active/eliminated/exited/imprisoned/unknown",
+      "lastSeenVolume": 数字,
+      "lastSeenChapter": 数字,
+      "exitReason": "原因或null",
+      "cannotAppear": true/false,
+      "knownConditions": ["条件1"],
+      "note": "说明"
+    }
+  },
+  "techLines": {
+    "技术名": {
+      "currentVersion": "版本",
+      "asOfVolume": 数字,
+      "asOfChapter": 数字,
+      "progression": ["新增版本记录"],
+      "rule": "规则"
+    }
+  },
+  "factions": {},
+  "majorEvents": [
+    {
+      "event": "事件描述",
+      "volume": 数字,
+      "chapter": 数字,
+      "irreversible": true/false,
+      "affectedCharacters": ["角色名"]
+    }
+  ],
+  "revealedInfo": [
+    {
+      "info": "信息描述",
+      "volume": 数字,
+      "chapter": 数字,
+      "note": "说明"
+    }
+  ],
+  "confidence": "high/medium/low",
+  "warnings": ["不确定项1", "不确定项2"]
+}
+
+如果本卷没有任何新增事实，输出空结构：{"characters":{},"techLines":{},"factions":{},"majorEvents":[],"revealedInfo":[],"confidence":"high","warnings":[]}`;
+```
+
+---
+
+13. 模型路由配置
+文件：app/lib/ai/modelRouter.ts
+
+```ts
+export function getModelConfig(step: string): { model: string; apiKey: string; baseUrl: string } {
+  const stepToModelType: Record<string, 'WRITER' | 'REVIEWER'> = {
+    '初稿': 'WRITER',
+    '读者反馈': 'REVIEWER',
+    '二稿': 'WRITER',
+    '审核报告': 'REVIEWER',
+    '终稿': 'WRITER',
+  };
+
+  const modelType = stepToModelType[step] || 'DEFAULT';
+  const modelKey = `${modelType}_MODEL`;
+  const apiKeyKey = `${modelType}_API_KEY`;
+  const baseUrlKey = `${modelType}_BASE_URL`;
+
+  const model = process.env[modelKey] || process.env.DEFAULT_MODEL;
+  const apiKey = process.env[apiKeyKey] || process.env.DEFAULT_API_KEY;
+  const baseUrl = process.env[baseUrlKey] || process.env.DEFAULT_BASE_URL;
+
+  if (!model || !apiKey || !baseUrl) {
+    throw new Error(`Missing configuration for ${step}. Please check your .env.local file.`);
+  }
+
+  return { model, apiKey, baseUrl };
+}
+```

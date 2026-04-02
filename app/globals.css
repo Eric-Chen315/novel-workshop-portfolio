@@ -1,26 +1,128 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #05070d;
+  --foreground: #e2e8f0;
+  --card: #0a1020;
+  --card-foreground: #e2e8f0;
+  --border: #243244;
+  --input: #243244;
+  --primary: #5b7cff;
+  --primary-foreground: #ffffff;
+  --secondary: #101b31;
+  --secondary-foreground: #d4def0;
+  --muted: #0f172a;
+  --muted-foreground: #94a3b8;
+  --accent: #172554;
+  --accent-foreground: #dbeafe;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+}
+
+.dark {
+  --background: #05070d;
+  --foreground: #e2e8f0;
+  --card: #0a1020;
+  --card-foreground: #e2e8f0;
+  --border: #243244;
+  --input: #243244;
+  --primary: #5b7cff;
+  --primary-foreground: #ffffff;
+  --secondary: #101b31;
+  --secondary-foreground: #d4def0;
+  --muted: #0f172a;
+  --muted-foreground: #94a3b8;
+  --accent: #172554;
+  --accent-foreground: #dbeafe;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --font-sans: "Segoe UI";
+  --font-mono: "Consolas";
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), "Segoe UI", sans-serif;
+}
+
+.grid-ambient {
+  background-image:
+    radial-gradient(circle at 20% 15%, rgba(79, 70, 229, 0.18), transparent 28%),
+    radial-gradient(circle at 82% 22%, rgba(14, 165, 233, 0.18), transparent 24%),
+    radial-gradient(circle at 50% 80%, rgba(37, 99, 235, 0.12), transparent 24%),
+    linear-gradient(to bottom, #05070d 0%, #080d19 35%, #05070d 100%);
+}
+
+.glow-card {
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.75), rgba(8, 12, 24, 0.82));
+  box-shadow:
+    inset 0 0 0 1px rgba(96, 165, 250, 0.1),
+    0 24px 50px rgba(3, 7, 18, 0.45);
+  backdrop-filter: blur(8px);
+}
+
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(59, 130, 246, 0.45), rgba(129, 140, 248, 0.15), transparent 62%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  padding: 1px;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.floating-glow {
+  animation: floaty 6s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }

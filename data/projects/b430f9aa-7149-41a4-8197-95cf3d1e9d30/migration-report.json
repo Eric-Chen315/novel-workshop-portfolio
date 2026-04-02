@@ -1,0 +1,40 @@
+{
+  "newProjectId": "b430f9aa-7149-41a4-8197-95cf3d1e9d30",
+  "newProjectTitle": "人间代码",
+  "oldProjectId": "d0ca5fae-df9e-48f1-96b0-566087c5cd94",
+  "oldProjectTitle": "本想败光十个亿，结果成了教父",
+  "backupDir": "D:\\myproject\\小说一站式生成工作台\\novel-workshop\\data\\projects\\d0ca5fae-df9e-48f1-96b0-566087c5cd94\\migration-backups\\human-code-separation-20260319-231919",
+  "migratedCharacters": [
+    "秦刃",
+    "苏可",
+    "郑维",
+    "林桐",
+    "陆鸣远"
+  ],
+  "migratedWorldSettings": [
+    "天枢科技",
+    "镜鉴科技",
+    "数据标注产业链",
+    "监管层",
+    "国家AI安全委员会",
+    "天枢科技总部",
+    "镜鉴科技办公室",
+    "衡石数据标注中心",
+    "镜（Mirror）",
+    "行为审计协议（BAP）",
+    "世界建造（World Building）",
+    "数据投毒（Data Poisoning）"
+  ],
+  "newOutlineVolumes": [
+    {
+      "title": "坠落（1-30章）",
+      "chapterNums": [
+        1
+      ]
+    }
+  ],
+  "newCharacterCount": 5,
+  "newWorldSettingCount": 12,
+  "oldRemainingHumanCodeCharacters": 0,
+  "oldRemainingHumanCodeWorldSettings": 0
+}

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/bible/characters": {},
+    "/api/bible/deprecated": {},
+    "/api/bible/plotlines": {},
+    "/api/bible/settings": {},
+    "/api/projects": {},
+    "/api/projects/[id]": {},
+    "/api/projects/[id]/chapters/[num]/preview": {},
+    "/api/projects/[id]/characters": {},
+    "/api/projects/[id]/generate-outline": {},
+    "/api/projects/[id]/wizard/ai-characters": {},
+    "/api/projects/[id]/wizard/ai-outline": {},
+    "/api/projects/[id]/wizard/ai-world": {},
+    "/api/projects/[id]/wizard/init": {},
+    "/api/projects/[id]/wizard/master-outline": {},
+    "/api/projects/[id]/wizard/save-outline": {},
+    "/api/projects/[id]/wizard/save-world": {},
+    "/api/write": {},
+    "/api/write/mock": {},
+    "/projects/[id]/workspace": {}
+  }
+}

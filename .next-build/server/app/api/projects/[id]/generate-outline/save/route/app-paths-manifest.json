@@ -1,0 +1,3 @@
+{
+  "/api/projects/[id]/generate-outline/save/route": "app/api/projects/[id]/generate-outline/save/route.js"
+}

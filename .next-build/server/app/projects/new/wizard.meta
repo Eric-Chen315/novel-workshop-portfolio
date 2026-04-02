@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/projects/layout,_N_T_/projects/new/layout,_N_T_/projects/new/wizard/layout,_N_T_/projects/new/wizard/page,_N_T_/projects/new/wizard"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/projects/new/wizard/__PAGE__",
+    "/projects/new/wizard",
+    "/projects/new",
+    "/projects",
+    "/_index",
+    "/_head"
+  ]
+}
